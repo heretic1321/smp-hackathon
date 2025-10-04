@@ -37,7 +37,12 @@ export class InventoryService {
         wallet,
         items: items.map(item => ({
           tokenId: item.tokenId,
+          relicId: item.relicId || `relic_${item.tokenId}`,
           relicType: item.relicType,
+          name: item.name || `Unknown ${item.relicType}`,
+          imageUrl: item.imageUrl || 'https://via.placeholder.com/300x300?text=Relic',
+          description: item.description || 'A mysterious relic with unknown properties.',
+          benefits: item.benefits || ['Unknown abilities'],
           affixes: Object.fromEntries(item.affixes),
           cid: item.cid,
           equipped: item.equipped,
@@ -222,6 +227,10 @@ export class InventoryService {
     wallet: string,
     tokenId: number,
     relicType: string,
+    name: string,
+    imageUrl: string,
+    description: string,
+    benefits: string[],
     affixes: Record<string, number>,
     cid: string,
     txHash?: string,
@@ -233,6 +242,10 @@ export class InventoryService {
           wallet,
           tokenId,
           relicType,
+          name,
+          imageUrl,
+          description,
+          benefits,
           affixes: new Map(Object.entries(affixes)),
           cid,
           equipped: false,
@@ -338,7 +351,12 @@ export class InventoryService {
 
       return equippedItems.map(item => ({
         tokenId: item.tokenId,
+        relicId: item.relicId || `relic_${item.tokenId}`,
         relicType: item.relicType,
+        name: item.name || `Unknown ${item.relicType}`,
+        imageUrl: item.imageUrl || 'https://via.placeholder.com/300x300?text=Relic',
+        description: item.description || 'A mysterious relic with unknown properties.',
+        benefits: item.benefits || ['Unknown abilities'],
         affixes: Object.fromEntries(item.affixes),
         cid: item.cid,
         equipped: item.equipped,
@@ -363,7 +381,12 @@ export class InventoryService {
 
       return items.map(item => ({
         tokenId: item.tokenId,
+        relicId: item.relicId || `relic_${item.tokenId}`,
         relicType: item.relicType,
+        name: item.name || `Unknown ${item.relicType}`,
+        imageUrl: item.imageUrl || 'https://via.placeholder.com/300x300?text=Relic',
+        description: item.description || 'A mysterious relic with unknown properties.',
+        benefits: item.benefits || ['Unknown abilities'],
         affixes: Object.fromEntries(item.affixes),
         cid: item.cid,
         equipped: item.equipped,
@@ -389,7 +412,12 @@ export class InventoryService {
 
       return items.map(item => ({
         tokenId: item.tokenId,
+        relicId: item.relicId || `relic_${item.tokenId}`,
         relicType: item.relicType,
+        name: item.name || `Unknown ${item.relicType}`,
+        imageUrl: item.imageUrl || 'https://via.placeholder.com/300x300?text=Relic',
+        description: item.description || 'A mysterious relic with unknown properties.',
+        benefits: item.benefits || ['Unknown abilities'],
         affixes: Object.fromEntries(item.affixes),
         cid: item.cid,
         equipped: item.equipped,
@@ -399,6 +427,40 @@ export class InventoryService {
         error: error.message,
         wallet,
         tokenIds,
+      });
+    }
+  }
+
+  /**
+   * Get relic by relicId
+   */
+  async getRelicById(relicId: string): Promise<InventoryItemDto> {
+    try {
+      const item = await this.inventoryModel.findOne({ relicId });
+      
+      if (!item) {
+        throw AppError.notFound(ErrorCode.PROFILE_NOT_FOUND, 'Relic not found');
+      }
+
+      return {
+        tokenId: item.tokenId,
+        relicId: item.relicId || `relic_${item.tokenId}`,
+        relicType: item.relicType,
+        name: item.name || `Unknown ${item.relicType}`,
+        imageUrl: item.imageUrl || 'https://via.placeholder.com/300x300?text=Relic',
+        description: item.description || 'A mysterious relic with unknown properties.',
+        benefits: item.benefits || ['Unknown abilities'],
+        affixes: Object.fromEntries(item.affixes),
+        cid: item.cid,
+        equipped: item.equipped,
+      };
+    } catch (error) {
+      if (error instanceof AppError) {
+        throw error;
+      }
+      throw AppError.internalError('Failed to get relic by ID', {
+        error: error.message,
+        relicId,
       });
     }
   }

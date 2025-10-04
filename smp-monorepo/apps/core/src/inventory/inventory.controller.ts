@@ -208,6 +208,25 @@ export class InventoryController {
     };
   }
 
+  @Get('relic/:relicId')
+  @ApiOperation({
+    summary: 'Get relic by ID',
+    description: 'Get a specific relic by its relicId'
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Relic retrieved successfully'
+  })
+  async getRelicById(
+    @Param('relicId') relicId: string,
+  ): Promise<{ ok: true; data: any }> {
+    const relic = await this.inventoryService.getRelicById(relicId);
+    return {
+      ok: true,
+      data: relic,
+    };
+  }
+
   @Get('stats')
   @ApiOperation({
     summary: 'Get inventory statistics',

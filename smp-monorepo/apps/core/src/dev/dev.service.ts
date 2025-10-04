@@ -7,6 +7,7 @@ import { Player, PlayerDocument } from '../database/schemas/player.schema';
 import { Run, RunDocument } from '../database/schemas/run.schema';
 import { Party, PartyDocument } from '../database/schemas/party.schema';
 import { ProfilesService } from '../profiles/profiles.service';
+import { BlockchainIntegrationService } from '../chain/services/blockchain-integration.service';
 import { AppError, ErrorCode } from '../common/errors/app.error';
 
 const SEED_GATES = [
@@ -132,7 +133,48 @@ const SEED_GATES = [
   },
 ];
 
-const RELIC_TYPES = ['sword', 'dagger', 'bow', 'staff', 'shield', 'armor', 'helmet', 'boots', 'ring', 'amulet'];
+const RELIC_TYPES = [
+  {
+    relicId: '1',
+    type: 'sword',
+    name: 'Shadow Monarch\'s Dual Blade',
+    description: 'A legendary dual blade infused with the power of shadows. Forged in the deepest dungeons by ancient shadow smiths, this weapon channels the very essence of darkness itself.',
+    benefits: ['+50% Shadow Damage', '+30% Critical Strike Chance', 'Shadow Clone: Creates shadow duplicates when attacking', 'Darkness Aura: Intimidates nearby enemies'],
+    imageUrl: 'https://res.cloudinary.com/dionysus2359/image/upload/v1759612747/Gemini_Generated_Image_fdypzafdypzafdyp_mjlfli.png'
+  },
+  {
+    relicId: '2',
+    type: 'dagger',
+    name: 'Void Assassin\'s Dagger',
+    description: 'A razor-sharp dagger that cuts through dimensions. Wielded by the most skilled assassins, it leaves no trace of its passage.',
+    benefits: ['+40% Stealth Damage', '+25% Critical Hit Rate', 'Void Strike: Teleports behind target', 'Silent Death: No sound when attacking'],
+    imageUrl: 'https://res.cloudinary.com/dionysus2359/image/upload/v1759611020/Gemini_Generated_Image_czt4nsczt4nsczt4_gnjbmi.png'
+  },
+  {
+    relicId: '3',
+    type: 'bow',
+    name: 'Storm Archer\'s Bow',
+    description: 'An ethereal bow that channels the power of storms. Each arrow carries the fury of lightning and the precision of wind.',
+    benefits: ['+60% Ranged Damage', '+35% Attack Speed', 'Lightning Arrows: Chain lightning between enemies', 'Wind Guidance: Arrows never miss'],
+    imageUrl: 'https://res.cloudinary.com/dionysus2359/image/upload/v1759611020/Gemini_Generated_Image_czt4nsczt4nsczt4_gnjbmi.png'
+  },
+  {
+    relicId: '4',
+    type: 'staff',
+    name: 'Arcane Scholar\'s Staff',
+    description: 'A mystical staff imbued with ancient knowledge. It amplifies magical power and channels the wisdom of forgotten mages.',
+    benefits: ['+70% Magic Damage', '+50% Mana Regeneration', 'Arcane Mastery: Spells cost 30% less mana', 'Ancient Wisdom: Unlock hidden spell combinations'],
+    imageUrl: 'https://res.cloudinary.com/dionysus2359/image/upload/v1759611020/Gemini_Generated_Image_czt4nsczt4nsczt4_gnjbmi.png'
+  },
+  {
+    relicId: '5',
+    type: 'shield',
+    name: 'Guardian\'s Bulwark',
+    description: 'An unbreakable shield forged from the bones of ancient dragons. It provides unmatched protection and reflects damage back to attackers.',
+    benefits: ['+80% Damage Reduction', '+40% Block Chance', 'Dragon\'s Roar: Stuns nearby enemies', 'Reflective Barrier: 50% damage reflection'],
+    imageUrl: 'https://res.cloudinary.com/dionysus2359/image/upload/v1759611020/Gemini_Generated_Image_czt4nsczt4nsczt4_gnjbmi.png'
+  }
+];
 
 @Injectable()
 export class DevService {
@@ -143,6 +185,7 @@ export class DevService {
     @InjectModel(Run.name) private runModel: Model<RunDocument>,
     @InjectModel(Party.name) private partyModel: Model<PartyDocument>,
     private readonly profilesService: ProfilesService,
+    private readonly blockchainService: BlockchainIntegrationService,
   ) {}
 
   /**
@@ -175,8 +218,27 @@ export class DevService {
    * Mint a test relic directly to inventory
    */
   async mintTestRelic(wallet: string, relicType?: string): Promise<any> {
-    const type = relicType || RELIC_TYPES[Math.floor(Math.random() * RELIC_TYPES.length)];
-    const tokenId = Date.now() + Math.floor(Math.random() * 1000);
+    // Only allow sword type relics
+    const swordRelic = RELIC_TYPES.find(r => r.type === 'sword');
+    const relicData = swordRelic || RELIC_TYPES[0]; // Fallback to first item (which is sword)
+    
+    // Generate a unique tokenId by checking existing ones
+    let tokenId: number;
+    let attempts = 0;
+    const maxAttempts = 10;
+    
+    do {
+      tokenId = Date.now() + Math.floor(Math.random() * 10000) + Math.floor(Math.random() * 1000);
+      attempts++;
+      
+      // Check if this tokenId already exists for this wallet
+      const existingItem = await this.inventoryModel.findOne({ wallet, tokenId });
+      if (!existingItem) break;
+      
+      if (attempts >= maxAttempts) {
+        throw new Error('Unable to generate unique tokenId after multiple attempts');
+      }
+    } while (true);
 
     // Generate random affixes
     const affixes = {
@@ -189,7 +251,12 @@ export class DevService {
     const relic = await this.inventoryModel.create({
       wallet,
       tokenId,
-      relicType: type,
+      relicId: relicData.relicId,
+      relicType: relicData.type,
+      name: relicData.name,
+      imageUrl: relicData.imageUrl,
+      description: relicData.description,
+      benefits: relicData.benefits,
       affixes: new Map(Object.entries(affixes)),
       cid: `Qm${Math.random().toString(36).substr(2, 44)}`,
       equipped: false,
@@ -200,7 +267,12 @@ export class DevService {
 
     return {
       tokenId,
-      relicType: type,
+      relicId: relicData.relicId,
+      relicType: relicData.type,
+      name: relicData.name,
+      imageUrl: relicData.imageUrl,
+      description: relicData.description,
+      benefits: relicData.benefits,
       affixes,
       cid: relic.cid,
       equipped: false,
@@ -337,6 +409,171 @@ export class DevService {
   async clearInventory(wallet: string): Promise<number> {
     const result = await this.inventoryModel.deleteMany({ wallet });
     return result.deletedCount;
+  }
+
+  /**
+   * Test run with blockchain minting - creates a fake relic and mints it on-chain
+   */
+  async testRunWithBlockchainMinting(wallet: string, relicId?: string): Promise<{
+    txHash: string;
+    username: string;
+    walletId: string;
+    relic: {
+      tokenId: number;
+      relicId: string;
+      relicType: string;
+      name: string;
+      imageUrl: string;
+      description: string;
+      benefits: string[];
+      affixes: Record<string, number>;
+      ipfsCid: string;
+    };
+  }> {
+    try {
+      // Get user profile
+      const profile = await this.profilesService.getProfileByAddress(wallet);
+      if (!profile) {
+        throw AppError.notFound(ErrorCode.PROFILE_NOT_FOUND, 'User profile not found');
+      }
+
+      // Get specified relic data or fallback to sword
+      let relicData;
+      if (relicId) {
+        relicData = RELIC_TYPES.find(r => r.relicId === relicId);
+        if (!relicData) {
+          throw AppError.validationError(`Relic with ID '${relicId}' not found`);
+        }
+      } else {
+        // Default to sword relic if no relicId specified
+        relicData = RELIC_TYPES.find(r => r.type === 'sword') || RELIC_TYPES[0];
+      }
+      
+      // Create fake relic data with enhanced information
+      const fakeRelic = {
+        relicId: relicData.relicId,
+        relicType: relicData.type,
+        name: relicData.name,
+        imageUrl: relicData.imageUrl,
+        description: relicData.description,
+        benefits: relicData.benefits,
+        affixes: {
+          shadow_damage: 25,
+          stealth_duration: 20,
+          crit_chance: 15,
+        },
+        ipfsCid: '', // Will be set to unique value during minting
+      };
+
+      // Mint relic on blockchain
+      const uniqueIpfsCid = `QmTestRelic${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      
+      const mintResult = await this.blockchainService.mintRelic(
+        wallet,
+        fakeRelic.relicType,
+        fakeRelic.affixes,
+        uniqueIpfsCid,
+      );
+
+      // Update the fakeRelic with the unique IPFS CID that was used
+      fakeRelic.ipfsCid = uniqueIpfsCid;
+
+      // Add relic to user's inventory in database with enhanced data
+      try {
+        // Check if this tokenId already exists for this wallet
+        const existingItem = await this.inventoryModel.findOne({ wallet, tokenId: mintResult.tokenId });
+        if (existingItem) {
+          console.warn(`TokenId ${mintResult.tokenId} already exists for wallet ${wallet}, updating existing item`);
+          // Update the existing item with new data
+          existingItem.name = fakeRelic.name;
+          existingItem.imageUrl = fakeRelic.imageUrl;
+          existingItem.description = fakeRelic.description;
+          existingItem.benefits = fakeRelic.benefits;
+          existingItem.affixes = new Map(Object.entries(fakeRelic.affixes));
+          existingItem.cid = fakeRelic.ipfsCid;
+          existingItem.lastSynced = new Date();
+          existingItem.syncAttempts = 0;
+          
+          await existingItem.save();
+          
+          // Return the updated item data
+          return {
+            txHash: mintResult.txHash,
+            username: profile.displayName,
+            walletId: profile.wallet,
+            relic: {
+              tokenId: existingItem.tokenId,
+              relicId: existingItem.relicId || '',
+              relicType: existingItem.relicType,
+              name: existingItem.name || '',
+              imageUrl: existingItem.imageUrl || '',
+              description: existingItem.description || '',
+              benefits: existingItem.benefits || [],
+              affixes: Object.fromEntries(existingItem.affixes || new Map()),
+              ipfsCid: existingItem.cid,
+            },
+          };
+        }
+
+        const inventoryItem = new this.inventoryModel({
+          wallet,
+          tokenId: mintResult.tokenId,
+          relicId: fakeRelic.relicId,
+          relicType: fakeRelic.relicType,
+          name: fakeRelic.name,
+          imageUrl: fakeRelic.imageUrl,
+          description: fakeRelic.description,
+          benefits: fakeRelic.benefits,
+          affixes: new Map(Object.entries(fakeRelic.affixes)),
+          cid: fakeRelic.ipfsCid,
+          equipped: false,
+          mintedAt: new Date(),
+          lastSynced: new Date(),
+          syncAttempts: 0,
+        });
+
+        await inventoryItem.save();
+      } catch (dbError) {
+        console.error('Database error:', dbError);
+        // Fallback: create without enhanced fields if schema doesn't support them yet
+        const fallbackItem = new this.inventoryModel({
+          wallet,
+          tokenId: mintResult.tokenId,
+          relicType: fakeRelic.relicType,
+          affixes: new Map(Object.entries(fakeRelic.affixes)),
+          cid: fakeRelic.ipfsCid,
+          equipped: false,
+          mintedAt: new Date(),
+          lastSynced: new Date(),
+          syncAttempts: 0,
+        });
+
+        await fallbackItem.save();
+      }
+
+      return {
+        txHash: mintResult.txHash,
+        username: profile.displayName,
+        walletId: wallet,
+        relic: {
+          tokenId: mintResult.tokenId,
+          relicId: fakeRelic.relicId,
+          relicType: fakeRelic.relicType,
+          name: fakeRelic.name,
+          imageUrl: fakeRelic.imageUrl,
+          description: fakeRelic.description,
+          benefits: fakeRelic.benefits,
+          affixes: fakeRelic.affixes,
+          ipfsCid: fakeRelic.ipfsCid,
+        },
+      };
+    } catch (error) {
+      console.error('testRunWithBlockchainMinting error:', error);
+      throw AppError.internalError('Failed to complete test run with blockchain minting', {
+        error: error.message,
+        wallet,
+      });
+    }
   }
 }
 

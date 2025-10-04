@@ -37,6 +37,9 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
 
   // Profile Test
   const [testAddress, setTestAddress] = useState('');
+  
+  // Blockchain Test
+  const [relicId, setRelicId] = useState('1'); // Default to sword relic
 
   useEffect(() => {
     const address = authService.address;
@@ -97,6 +100,50 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
       });
     } catch (err: any) {
       setError(err.message || 'Failed to finish run');
+      setResult({
+        type: 'error',
+        title: 'Error',
+        data: err
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleTestRunBlockchain = async () => {
+    setLoading(true);
+    setError('');
+    setResult(null);
+
+    try {
+      const response = await fetch('http://api.lvh.me:4000/v1/dev/test-run-blockchain', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          relicId: relicId || undefined, // Send relicId if specified
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.ok) {
+        setResult({
+          type: 'success',
+          title: 'Dev Panel Test Run Completed!',
+          data: data.data,
+          txHash: data.data.txHash,
+          username: data.data.username,
+          walletId: data.data.walletId,
+          relic: data.data.relic
+        });
+      } else {
+        throw new Error(data.error?.message || 'Failed to complete test run');
+      }
+    } catch (err: any) {
+      setError(err.message || 'Failed to complete test run');
       setResult({
         type: 'error',
         title: 'Error',
@@ -370,54 +417,48 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
                         {loading ? 'Creating...' : '2. Create Test Run'}
                       </Button>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="runId" className="text-white">Run ID</Label>
-                        <Input
-                          id="runId"
-                          value={runId || 'Generated after creating test run'}
-                          disabled
-                          className="bg-black/70 border-purple-500/50 text-gray-400"
-                          placeholder="Generated after creating test run"
-                        />
+                    <div className="bg-purple-950/20 border border-purple-600/30 rounded-lg p-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label className="text-white">Your Address</Label>
+                          <Input
+                            value={testAddress}
+                            disabled
+                            className="bg-black/70 border-purple-500/50 text-gray-400"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-white">Status</Label>
+                          <Input
+                            value={testAddress ? "Ready to test" : "Connect wallet first"}
+                            disabled
+                            className="bg-black/70 border-purple-500/50 text-gray-400"
+                          />
+                        </div>
                       </div>
+                    </div>
+
+                    <div className="space-y-4">
                       <div>
-                        <Label htmlFor="bossId" className="text-white">Boss ID</Label>
+                        <Label className="text-white">Relic ID (Optional)</Label>
                         <Input
-                          id="bossId"
-                          value={bossId}
-                          onChange={(e) => setBossId(e.target.value)}
+                          value={relicId}
+                          onChange={(e) => setRelicId(e.target.value)}
+                          placeholder="1 (sword), 2 (dagger), 3 (bow), etc."
                           className="bg-black/70 border-purple-500/50 text-white"
-                          placeholder="TestBoss"
                         />
-                      </div>
-                      <div>
-                        <Label htmlFor="damage" className="text-white">Damage Dealt</Label>
-                        <Input
-                          id="damage"
-                          type="number"
-                          value={damage}
-                          onChange={(e) => setDamage(e.target.value)}
-                          className="bg-black/70 border-purple-500/50 text-white"
-                          placeholder="1000"
-                        />
-                      </div>
-                      <div>
-                        <Label className="text-white">Your Address</Label>
-                        <Input
-                          value={testAddress}
-                          disabled
-                          className="bg-black/70 border-purple-500/50 text-gray-400"
-                        />
+                        <p className="text-xs text-gray-400 mt-1">
+                          Leave empty for default sword relic (ID: 1)
+                        </p>
                       </div>
                     </div>
 
                     <Button
-                      onClick={handleFinishRun}
-                      disabled={loading || !testAddress || !runId}
+                      onClick={handleTestRunBlockchain}
+                      disabled={loading || !testAddress}
                       className="w-full bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white"
                     >
-                      {loading ? 'Processing...' : '3. Finish Run & Mint NFTs'}
+                      {loading ? 'Testing...' : '🚀 Test Run & Mint Relic'}
                     </Button>
 
                     <div className="bg-purple-950/30 border border-purple-600/30 rounded-lg p-4">
@@ -425,10 +466,9 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
                       <ul className="text-sm text-gray-300 space-y-1">
                         <li>1. ✅ Connect wallet and authenticate</li>
                         <li>2. ✅ Create profile (if new user)</li>
-                        <li>3. ✅ Seed gates data</li>
-                        <li>4. ✅ Create test run</li>
-                        <li>5. ✅ Finish run → trigger blockchain minting</li>
-                        <li>6. ✅ View minted relics and SBT updates</li>
+                        <li>3. ✅ Seed gates data (optional)</li>
+                        <li>4. 🚀 <strong>Test Run & Mint Relic</strong> - Creates fake relic and mints on blockchain</li>
+                        <li>5. ✅ View transaction hash, username, wallet ID, and relic details</li>
                       </ul>
                     </div>
                   </CardContent>
@@ -583,7 +623,66 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {result.relics && result.relics.length > 0 && (
+                  {/* Dev Panel Test Run Results */}
+                  {result.username && result.walletId && result.relic && (
+                    <div className="mb-4">
+                      <h4 className="text-white font-semibold mb-2">🎯 Dev Panel Test Run Results:</h4>
+                      <div className="space-y-3">
+                        <div className="bg-green-950/30 border border-green-600/30 rounded-lg p-3">
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <span className="text-green-400 font-semibold">Username:</span>
+                              <p className="text-white">{result.username}</p>
+                            </div>
+                            <div>
+                              <span className="text-green-400 font-semibold">Wallet ID:</span>
+                              <p className="text-white font-mono text-sm">{result.walletId}</p>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="bg-purple-950/30 border border-purple-600/30 rounded-lg p-3">
+                          <h5 className="text-purple-400 font-semibold mb-2">Minted Relic:</h5>
+                          <div className="space-y-2">
+                            <div className="flex justify-between">
+                              <span className="text-white">Token ID:</span>
+                              <span className="text-purple-300">{result.relic.tokenId}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-white">Type:</span>
+                              <span className="text-purple-300">{result.relic.relicType}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-white">IPFS CID:</span>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => copyToClipboard(result.relic.ipfsCid)}
+                                className="text-purple-300"
+                              >
+                                <Copy className="w-4 h-4 mr-1" />
+                                {result.relic.ipfsCid.substring(0, 8)}...
+                              </Button>
+                            </div>
+                            <div>
+                              <span className="text-white">Affixes:</span>
+                              <div className="mt-1 space-y-1">
+                                {Object.entries(result.relic.affixes).map(([key, value]) => (
+                                  <div key={key} className="flex justify-between text-sm">
+                                    <span className="text-gray-300">{key}:</span>
+                                    <span className="text-purple-300">+{String(value)}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Regular Run Results */}
+                  {result.relics && result.relics.length > 0 && !result.relic && (
                     <div className="mb-4">
                       <h4 className="text-white font-semibold mb-2">Minted Relics:</h4>
                       <div className="space-y-2">

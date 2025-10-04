@@ -144,7 +144,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
             </Button>
             <Button
               variant="outline"
-              className="border-purple-500/50 text-purple-300 hover:bg-purple-800/40"
+              className="border-purple-500/50 text-purple-700 hover:bg-purple-800/40 hover:text-white"
               onClick={handleSignOut}
             >
               <LogOut className="w-4 h-4 mr-2" />

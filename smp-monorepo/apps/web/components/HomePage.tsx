@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { authService } from '../src/lib/auth';
-import { LogOut } from 'lucide-react';
+import { LogOut, User } from 'lucide-react';
 
 interface HomePageProps {
   onNavigate: (page: 'home' | 'auth' | 'username-setup' | 'profile' | 'dungeons' | 'dev') => void;
@@ -67,10 +67,18 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 >
                   Enter Dungeons
                 </Button>
+                <Button
+                  variant="outline"
+                  className="border-blue-500/60 text-blue-600 hover:bg-blue-800/50 hover:border-blue-400 hover:text-blue-100 transition-all duration-200 shadow-lg hover:shadow-blue-500/25 font-medium"
+                  onClick={() => onNavigate('profile')}
+                >
+                  <User className="w-4 h-4 mr-2" />
+                  My Profile
+                </Button>
                 {isAdmin && (
                   <Button
                     variant="outline"
-                    className="border-yellow-500/50 text-yellow-300 hover:bg-yellow-800/40"
+                    className="border-yellow-500/50 text-yellow-600 hover:bg-yellow-800/40 hover:text-white"
                     onClick={() => onNavigate('dev')}
                   >
                     Dev Panel
@@ -78,7 +86,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 )}
                 <Button
                   variant="outline"
-                  className="border-purple-500/50 text-purple-300 hover:bg-purple-800/40"
+                  className="border-purple-500/50 text-purple-700 hover:bg-purple-800/40 hover:text-white"
                   onClick={() => authService.signOut().then(() => onNavigate('home'))}
                 >
                   <LogOut className="w-4 h-4 mr-2" />

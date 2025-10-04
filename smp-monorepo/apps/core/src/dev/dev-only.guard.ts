@@ -18,6 +18,11 @@ export class DevOnlyGuard implements CanActivate {
       throw AppError.unauthorized(ErrorCode.UNAUTHORIZED, 'Authentication required');
     }
 
+    // Allow all authenticated users in development
+    if (process.env.NODE_ENV === 'development') {
+      return true;
+    }
+
     try {
       const profile = await this.profilesService.getProfileByAddress(user.address);
       

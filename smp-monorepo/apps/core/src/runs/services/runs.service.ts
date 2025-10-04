@@ -436,17 +436,11 @@ export class RunsService {
   }
 
   /**
-   * Generate random relic type
+   * Generate random relic type - only sword type
    */
   private getRandomRelicType(): string {
-    const relicTypes = [
-      'SunspireBand',
-      'FrostbiteRing',
-      'BlazingAmulet',
-      'ShadowCloak',
-      'VitalityPendant',
-    ];
-    return relicTypes[Math.floor(Math.random() * relicTypes.length)];
+    // Only return sword type relics
+    return 'sword';
   }
 
   /**

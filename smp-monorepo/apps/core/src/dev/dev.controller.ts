@@ -163,5 +163,57 @@ export class DevController {
       data: { removed: count },
     };
   }
+
+  @Post('test-run-blockchain')
+  @ApiOperation({
+    summary: '[DEV] Test run with blockchain minting',
+    description: 'Simulates a game completion with blockchain relic minting. Returns transaction hash, username, wallet ID, and relic info.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Test run completed successfully with blockchain minting',
+    schema: {
+      type: 'object',
+      properties: {
+        ok: { type: 'boolean', example: true },
+        data: {
+          type: 'object',
+          properties: {
+            txHash: { type: 'string', example: '0x1234...' },
+            username: { type: 'string', example: 'TestUser' },
+            walletId: { type: 'string', example: '0x742d35Cc6A3e0b6cEfF4c9CE0C8cD3B8C4e9f2423' },
+            relic: {
+              type: 'object',
+              properties: {
+                tokenId: { type: 'number', example: 123 },
+                relicType: { type: 'string', example: 'Shadow Monarch\'s Test Ring' },
+                affixes: { type: 'object' },
+                ipfsCid: { type: 'string', example: 'QmTestRelic123' }
+              }
+            }
+          }
+        }
+      }
+    }
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'User profile not found'
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Blockchain transaction failed'
+  })
+  async testRunWithBlockchainMinting(
+    @Req() request: any,
+    @Body() body: { relicId?: string },
+  ): Promise<{ ok: true; data: any }> {
+    const wallet = request.user.address;
+    const result = await this.devService.testRunWithBlockchainMinting(wallet, body.relicId);
+    return {
+      ok: true,
+      data: result,
+    };
+  }
 }
 

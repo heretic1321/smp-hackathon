@@ -10,6 +10,7 @@ import { Run, RunSchema } from '../database/schemas/run.schema';
 import { Party, PartySchema } from '../database/schemas/party.schema';
 import { ProfilesModule } from '../profiles/profiles.module';
 import { AuthModule } from '../auth/auth.module';
+import { BlockchainIntegrationService } from '../chain/services/blockchain-integration.service';
 
 @Module({
   imports: [
@@ -24,7 +25,7 @@ import { AuthModule } from '../auth/auth.module';
     AuthModule,
   ],
   controllers: [DevController],
-  providers: [DevService, DevOnlyGuard],
+  providers: [DevService, DevOnlyGuard, BlockchainIntegrationService],
   exports: [DevService],
 })
 export class DevModule {}

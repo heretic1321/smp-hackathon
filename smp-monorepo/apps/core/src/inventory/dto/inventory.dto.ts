@@ -4,7 +4,12 @@ import { Address } from '../../common/schemas/base.schema';
 // Inventory item information
 export const InventoryItem = z.object({
   tokenId: z.number().int(),
+  relicId: z.string().optional(),
   relicType: z.string(),
+  name: z.string().optional(),
+  imageUrl: z.string().optional(),
+  description: z.string().optional(),
+  benefits: z.array(z.string()).optional(),
   affixes: z.record(z.string(), z.number()),
   cid: z.string(),
   equipped: z.boolean().optional(),

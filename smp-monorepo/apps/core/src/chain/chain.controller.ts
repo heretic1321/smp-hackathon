@@ -99,4 +99,38 @@ export class ChainController {
       data: stats,
     };
   }
+
+  @Get('contracts')
+  @ApiOperation({
+    summary: 'Validate contract addresses',
+    description: 'Check if all required contracts are deployed and accessible'
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Contract validation completed successfully'
+  })
+  async validateContracts(): Promise<{ ok: true; data: any }> {
+    const contracts = await this.blockchainService.validateContracts();
+    return {
+      ok: true,
+      data: contracts,
+    };
+  }
+
+  @Get('test-player-card')
+  @ApiOperation({
+    summary: 'Test PlayerCardSBT contract function',
+    description: 'Test if the PlayerCardSBT contract and its functions are working correctly'
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'PlayerCardSBT test completed successfully'
+  })
+  async testPlayerCardSBT(): Promise<{ ok: true; data: any }> {
+    const testResult = await this.blockchainService.testPlayerCardSBTFunction();
+    return {
+      ok: true,
+      data: testResult,
+    };
+  }
 }

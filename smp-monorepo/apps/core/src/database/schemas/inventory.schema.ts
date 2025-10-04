@@ -24,9 +24,39 @@ export class Inventory {
 
   @Prop({
     type: String,
+    required: false,
+  })
+  relicId?: string; // Unique relic identifier for frontend
+
+  @Prop({
+    type: String,
     required: true,
   })
   relicType: string; // Type of relic
+
+  @Prop({
+    type: String,
+    required: false,
+  })
+  name?: string; // Display name of the relic
+
+  @Prop({
+    type: String,
+    required: false,
+  })
+  imageUrl?: string; // Image URL for the relic
+
+  @Prop({
+    type: String,
+    required: false,
+  })
+  description?: string; // Description of the relic
+
+  @Prop({
+    type: [String],
+    required: false,
+  })
+  benefits?: string[]; // Array of benefit descriptions
 
   @Prop({
     type: Map,
@@ -97,6 +127,7 @@ InventorySchema.index({ wallet: 1, tokenId: 1 }, { unique: true });
 InventorySchema.index({ wallet: 1 });
 InventorySchema.index({ equipped: 1 });
 InventorySchema.index({ relicType: 1 });
+InventorySchema.index({ relicId: 1 }, { sparse: true });
 InventorySchema.index({ lastSynced: 1 });
 InventorySchema.index({ txHash: 1 }, { sparse: true });
 
