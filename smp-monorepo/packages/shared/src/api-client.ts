@@ -4,6 +4,8 @@ import type {
   SiweChallengeResponse,
   SiweVerifyRequest,
   SiweVerifyResponse,
+  AdminCheckResponse,
+  AuthMeResponse,
   Profile,
   ProfileUpsertInput,
   GatesResponse,
@@ -95,8 +97,12 @@ export class ApiClient {
     });
   }
 
-  async getMe(): Promise<{ address: Address; roles: string[] }> {
+  async getMe(): Promise<AuthMeResponse> {
     return this.request('/auth/me');
+  }
+
+  async checkAdmin(): Promise<AdminCheckResponse> {
+    return this.request('/auth/admin');
   }
 
   // Profile endpoints

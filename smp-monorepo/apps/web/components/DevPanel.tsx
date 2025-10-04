@@ -10,7 +10,7 @@ import { Badge } from "./ui/badge";
 import { ScrollArea } from "./ui/scroll-area";
 import { 
   ArrowLeft, Code, Rocket, Database, Coins, Trophy, 
-  Users, CheckCircle, XCircle, Copy, ExternalLink 
+  Users, CheckCircle, XCircle, Copy, ExternalLink, Shield, AlertTriangle
 } from "lucide-react";
 import { authService } from '../src/lib/auth';
 import { apiClient, type ResultSummary } from '@smp/shared';
@@ -24,6 +24,8 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [error, setError] = useState<string>('');
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [adminLoading, setAdminLoading] = useState(true);
 
   // Run Finish Test
   const [runId, setRunId] = useState('');
@@ -41,6 +43,27 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
     if (address) {
       setTestAddress(address);
     }
+  }, []);
+
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      if (authService.isAuthenticated) {
+        setAdminLoading(true);
+        try {
+          const adminStatus = await authService.checkAdminStatus();
+          setIsAdmin(adminStatus);
+        } catch (error) {
+          setIsAdmin(false);
+        } finally {
+          setAdminLoading(false);
+        }
+      } else {
+        setIsAdmin(false);
+        setAdminLoading(false);
+      }
+    };
+
+    checkAdminStatus();
   }, []);
 
   const handleFinishRun = async () => {
@@ -216,6 +239,57 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
   };
+
+  // Show loading state while checking admin status
+  if (adminLoading) {
+    return (
+      <div className="w-full min-h-screen relative">
+        <div className="fixed inset-0 bg-gradient-to-br from-slate-950 via-purple-950/50 to-slate-900 pointer-events-none"></div>
+        <div className="relative z-10 flex items-center justify-center min-h-screen">
+          <Card className="bg-black/80 border-purple-600/40 p-8">
+            <CardContent className="text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-400 mx-auto mb-4"></div>
+              <p className="text-white">Checking admin access...</p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // Show unauthorized access message if not admin
+  if (!isAdmin) {
+    return (
+      <div className="w-full min-h-screen relative">
+        <div className="fixed inset-0 bg-gradient-to-br from-slate-950 via-purple-950/50 to-slate-900 pointer-events-none"></div>
+        <div className="relative z-10 flex items-center justify-center min-h-screen">
+          <Card className="bg-black/80 border-red-600/40 p-8 max-w-md">
+            <CardHeader className="text-center">
+              <div className="flex justify-center mb-4">
+                <Shield className="w-16 h-16 text-red-400" />
+              </div>
+              <CardTitle className="text-white flex items-center justify-center">
+                <AlertTriangle className="w-6 h-6 mr-2 text-red-400" />
+                Access Denied
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-center space-y-4">
+              <p className="text-gray-300">
+                You don't have admin privileges to access the Developer Panel.
+              </p>
+              <Button
+                onClick={() => onNavigate('home')}
+                className="w-full bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Home
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full min-h-screen relative">

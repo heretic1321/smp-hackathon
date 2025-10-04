@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ProfilesController } from './profiles.controller';
 import { ProfilesService } from './profiles.service';
@@ -8,7 +8,7 @@ import { AuthModule } from '../auth/auth.module';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Player.name, schema: PlayerSchema }]),
-    AuthModule,
+    forwardRef(() => AuthModule),
   ],
   controllers: [ProfilesController],
   providers: [ProfilesService],

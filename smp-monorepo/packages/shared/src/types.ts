@@ -25,6 +25,19 @@ export const SiweVerifyResponse = z.object({
   address: Address
 });
 
+// Admin types
+export const AdminCheckResponse = z.object({
+  isAdmin: z.boolean(),
+  roles: z.array(z.string())
+});
+
+// Auth Me Response (updated to include isAdmin)
+export const AuthMeResponse = z.object({
+  address: Address,
+  roles: z.array(z.string()),
+  isAdmin: z.boolean()
+});
+
 // Profile types
 export const Profile = z.object({
   wallet: Address,
@@ -201,6 +214,9 @@ export type SiweChallengeRequest = z.infer<typeof SiweChallengeRequest>;
 export type SiweChallengeResponse = z.infer<typeof SiweChallengeResponse>;
 export type SiweVerifyRequest = z.infer<typeof SiweVerifyRequest>;
 export type SiweVerifyResponse = z.infer<typeof SiweVerifyResponse>;
+
+export type AdminCheckResponse = z.infer<typeof AdminCheckResponse>;
+export type AuthMeResponse = z.infer<typeof AuthMeResponse>;
 
 export type Profile = z.infer<typeof Profile>;
 export type ProfileUpsertInput = z.infer<typeof ProfileUpsertInput>;

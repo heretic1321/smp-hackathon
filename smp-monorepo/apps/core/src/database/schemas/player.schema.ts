@@ -105,6 +105,12 @@ export class Player {
     default: Date.now,
   })
   updatedAt: Date;
+  
+  @Prop({
+    type: Boolean,
+    default: false,
+  })
+  isAdmin: boolean;
 }
 
 // Create compound index for display name case-insensitive uniqueness

@@ -5,9 +5,9 @@ import { Badge } from "./ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { ScrollArea } from "./ui/scroll-area";
-import { ArrowLeft, Crown, Users, Clock, Sword, Shield, Star, Gem, ChevronDown, ChevronUp, AlertCircle, Wifi, WifiOff, MapPin } from "lucide-react";
+import { ArrowLeft, Crown, Users, Sword, Shield, Star, Gem, ChevronDown, ChevronUp, AlertCircle, MapPin } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
-import { apiClient, type Party, type GateWithOccupancy } from '@smp/shared';
+import { apiClient, type GateWithOccupancy } from '@smp/shared';
 import { authService } from '../src/lib/auth';
 
 interface PartyPageProps {
@@ -16,148 +16,49 @@ interface PartyPageProps {
 }
 
 export function PartyPage({ onNavigate, gateId }: PartyPageProps) {
-  const [party, setParty] = useState<Party | null>(null);
   const [gate, setGate] = useState<GateWithOccupancy | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>('');
-  const [sseConnected, setSseConnected] = useState(false);
   const [equippedRelics, setEquippedRelics] = useState<number[]>([]);
-  const [starting, setStarting] = useState(false);
-  const [expandedPlayer, setExpandedPlayer] = useState<string | null>(null);
+  const [expandedPlayer, setExpandedPlayer] = useState<boolean>(false);
+  const [currentUserProfile, setCurrentUserProfile] = useState<any>(null);
 
   useEffect(() => {
     if (gateId) {
-      loadParty();
+      loadData();
     }
   }, [gateId]);
 
-  useEffect(() => {
-    if (party) {
-      setupSSE();
-    }
-    return () => {
-      // Cleanup SSE connection
-      if (typeof window !== 'undefined' && (window as any).eventSource) {
-        (window as any).eventSource.close();
-      }
-    };
-  }, [party]);
-
-  const loadParty = async () => {
+  const loadData = async () => {
     if (!gateId) return;
 
     try {
       setLoading(true);
       setError('');
 
-      // Get gate info first
+      // Get gate info
       const gateData = await apiClient.getGate(gateId);
       setGate(gateData);
 
-      // Join or create party
-      const partyData = await apiClient.joinOrCreateParty({ gateId });
-      setParty(partyData);
+      // Get current user profile
+      const address = authService.address;
+      if (address) {
+        try {
+          const profile = await apiClient.getProfile(address);
+          setCurrentUserProfile(profile);
+        } catch (error) {
+          console.warn('Could not load user profile:', error);
+        }
+      }
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to load party');
+      setError(error instanceof Error ? error.message : 'Failed to load data');
     } finally {
       setLoading(false);
     }
   };
 
-  const setupSSE = () => {
-    if (!party) return;
-
-    // Close existing connection
-    if (typeof window !== 'undefined' && (window as any).eventSource) {
-      (window as any).eventSource.close();
-    }
-
-    const eventSource = apiClient.createPartySSEConnection(party.partyId);
-
-    eventSource.onopen = () => {
-      setSseConnected(true);
-    };
-
-    eventSource.onerror = () => {
-      setSseConnected(false);
-    };
-
-    eventSource.addEventListener('member_joined', (event) => {
-      const data = JSON.parse(event.data);
-      setParty(prev => prev ? {
-        ...prev,
-        members: [...prev.members, data]
-      } : null);
-    });
-
-    eventSource.addEventListener('member_left', (event) => {
-      const data = JSON.parse(event.data);
-      setParty(prev => prev ? {
-        ...prev,
-        members: prev.members.filter(m => m.wallet !== data.wallet)
-      } : null);
-    });
-
-    eventSource.addEventListener('ready_changed', (event) => {
-      const data = JSON.parse(event.data);
-      setParty(prev => prev ? {
-        ...prev,
-        members: prev.members.map(m =>
-          m.wallet === data.wallet ? { ...m, isReady: data.isReady } : m
-        )
-      } : null);
-    });
-
-    eventSource.addEventListener('started', (event) => {
-      const data = JSON.parse(event.data);
-      setStarting(true);
-      // Handle game start
-    });
-
-    (window as any).eventSource = eventSource;
-  };
-
-  const handleReadyToggle = async () => {
-    if (!party) return;
-
-    try {
-      const currentMember = party.members.find(m => m.wallet === authService.address);
-      if (!currentMember) return;
-
-      await apiClient.setReady(party.partyId, { isReady: !currentMember.isReady });
-    } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to update ready status');
-    }
-  };
-
-  const handleLockParty = async () => {
-    if (!party) return;
-
-    try {
-      await apiClient.lockParty(party.partyId, { equippedRelicIds: equippedRelics });
-    } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to lock party');
-    }
-  };
-
-  const handleStartParty = async () => {
-    if (!party) return;
-
-    try {
-      setStarting(true);
-      await apiClient.startParty(party.partyId);
-      // The SSE will handle the redirect
-    } catch (error) {
-      setStarting(false);
-      setError(error instanceof Error ? error.message : 'Failed to start party');
-    }
-  };
-
   const handleLeaveParty = async () => {
-    if (!party) return;
-
     try {
-      await apiClient.leaveParty(party.partyId);
       onNavigate('dungeons');
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Failed to leave party');
@@ -168,7 +69,7 @@ export function PartyPage({ onNavigate, gateId }: PartyPageProps) {
   if (loading) {
     return (
       <div className="w-full min-h-screen relative flex items-center justify-center">
-        <div className="text-white text-lg">Loading party...</div>
+        <div className="text-white text-lg">Loading dungeon...</div>
       </div>
     );
   }
@@ -180,7 +81,7 @@ export function PartyPage({ onNavigate, gateId }: PartyPageProps) {
           <AlertCircle className="w-12 h-12 text-red-400" />
           <div className="text-red-400 text-lg">{error}</div>
           <Button
-            onClick={loadParty}
+            onClick={loadData}
             className="bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white"
           >
             Try Again
@@ -213,42 +114,60 @@ const getRarityColor = (rarity: string) => {
   }
 };
 
-  // Early return for null party or gate - check both party and members
-  if (!party || !gate || !party.members) {
+  // Early return for null gate
+  if (!gate) {
     return (
       <div className="w-full min-h-screen relative flex items-center justify-center">
         <div className="text-white text-lg">
-          {loading ? 'Loading party...' : 'Party not found'}
+          {loading ? 'Loading dungeon...' : 'Dungeon not found'}
         </div>
       </div>
     );
   }
 
-  // Safe to access party and gate here - they are guaranteed to exist
-  const currentPlayer = party.members.find(m => m.wallet === authService.address);
-  const isLeader = party.leader === authService.address;
-  const allReady = party.members.every(m => m.isReady);
-  const canStart = isLeader && allReady && party.state === 'waiting';
-
-  // Mock relics data (simplified for now)
-  const mockRelics = [
-    {
-      id: 1,
-      name: "Shadow Ring",
-      type: "Accessory",
-      rarity: "Epic",
-      effects: ["+20% Shadow Damage", "+15% Stealth Duration"],
-      image: "https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=100&h=100&fit=crop&crop=center"
-    },
-    {
-      id: 2,
-      name: "Crimson Amulet",
-      type: "Necklace",
-      rarity: "Rare",
-      effects: ["+30 HP", "+10% Fire Resistance"],
-      image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=100&h=100&fit=crop&crop=center"
-    }
-  ];
+// Mock relics data
+const mockRelics = [
+  {
+    id: 1,
+    name: "Shadow Ring",
+    type: "Accessory",
+    rarity: "Epic",
+    effects: ["+20% Shadow Damage", "+15% Stealth Duration"],
+    image: "https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=100&h=100&fit=crop&crop=center"
+  },
+  {
+    id: 2,
+    name: "Crimson Amulet",
+    type: "Necklace",
+    rarity: "Rare",
+    effects: ["+30 HP", "+10% Fire Resistance"],
+    image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=100&h=100&fit=crop&crop=center"
+  },
+  {
+    id: 3,
+    name: "Void Crystal",
+    type: "Stone",
+    rarity: "Legendary",
+    effects: ["+25% Magic Power", "Void Shield (5 sec cooldown)"],
+    image: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=100&h=100&fit=crop&crop=center"
+  },
+  {
+    id: 4,
+    name: "Hunter's Mark",
+    type: "Tattoo",
+    rarity: "Common",
+    effects: ["+5% Experience Gain"],
+    image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=100&h=100&fit=crop&crop=center"
+  },
+  {
+    id: 5,
+    name: "Ethereal Blade Fragment",
+    type: "Weapon Enhancement",
+    rarity: "Epic",
+    effects: ["+40 Attack Power", "Ghost Strike (Critical hits ignore armor)"],
+    image: "https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=100&h=100&fit=crop&crop=center"
+  }
+];
 
   const handleEquipRelic = (relicId: number) => {
     if (equippedRelics.includes(relicId)) {
@@ -280,19 +199,9 @@ const getRarityColor = (rarity: string) => {
           
           <div className="flex items-center space-x-4">
             <Badge className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white border-0 px-4 py-2">
-              <Users className="w-4 h-4 mr-2" />
-              Party Lobby
+              <Sword className="w-4 h-4 mr-2" />
+              Dungeon Preparation
             </Badge>
-            <div className="flex items-center space-x-2">
-              {sseConnected ? (
-                <Wifi className="w-4 h-4 text-green-400" />
-              ) : (
-                <WifiOff className="w-4 h-4 text-red-400" />
-              )}
-              <span className="text-sm text-gray-300">
-                {sseConnected ? 'Connected' : 'Disconnected'}
-              </span>
-            </div>
           </div>
         </header>
 
@@ -328,7 +237,7 @@ const getRarityColor = (rarity: string) => {
                         </Badge>
                         <div className="flex items-center space-x-2 text-gray-300">
                           <Users className="w-5 h-5" />
-                          <span>{party.members.length}/{gate.capacity} Hunters</span>
+                          <span>1/{gate.capacity} Hunters</span>
                         </div>
                         <div className="flex items-center space-x-2 text-gray-300">
                           <MapPin className="w-5 h-5" />
@@ -342,112 +251,96 @@ const getRarityColor = (rarity: string) => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Party Members List */}
+              {/* Solo Hunter Display */}
               <div className="lg:col-span-2">
                 <Card className="bg-black/90 border-purple-500/50 shadow-2xl shadow-purple-700/30">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between mb-6">
-                      <h2 className="text-2xl font-bold text-white">Party Members</h2>
+                      <h2 className="text-2xl font-bold text-white">Solo Hunter</h2>
                       <Badge className="bg-purple-600/20 border border-purple-500/30 text-purple-300 px-3 py-1">
-                        {party.members.length} / {gate.capacity}
+                        1 / {gate.capacity}
                       </Badge>
                     </div>
 
-                    <ScrollArea className="h-[500px] pr-4">
-                      <div className="space-y-4">
-                        {party.members
-                          .sort((a, b) => {
-                            const aIsCurrent = a.wallet === authService.address;
-                            const bIsCurrent = b.wallet === authService.address;
-                            const aIsLeader = a.wallet === party.leader;
-                            const bIsLeader = b.wallet === party.leader;
-
-                            if (aIsCurrent) return -1;
-                            if (bIsCurrent) return 1;
-                            if (aIsLeader) return -1;
-                            if (bIsLeader) return 1;
-                            return 0;
-                          })
-                          .map((member) => {
-                            const isCurrentPlayer = member.wallet === authService.address;
-                            const isLeader = member.wallet === party.leader;
-                            return (
-                            <Card key={member.wallet} className={`bg-purple-950/30 border-purple-600/40 hover:border-purple-500/60 transition-colors ${isCurrentPlayer ? 'ring-2 ring-purple-500/50' : ''}`}>
-                              <CardContent className="p-4">
-                                <div className="flex items-center justify-between">
-                                  <div className="flex items-center space-x-4">
-                                    <Avatar className="w-12 h-12 border-2 border-purple-500/50">
-                                      <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${member.displayName}`} alt={member.displayName} />
-                                      <AvatarFallback className="bg-purple-700 text-white">
-                                        {member.displayName.slice(0, 2).toUpperCase()}
-                                      </AvatarFallback>
-                                    </Avatar>
-                                    
-                                    <div>
-                                      <div className="flex items-center space-x-2">
-                                        <h3 className="font-semibold text-white">
-                                          {member.displayName}
-                                          {isCurrentPlayer && <span className="text-purple-400 ml-1">(You)</span>}
-                                        </h3>
-                                        {isLeader && (
-                                          <Crown className="w-4 h-4 text-yellow-400" />
-                                        )}
-                                      </div>
-                                      <div className="flex items-center space-x-2 mt-1">
-                                        <span className="text-sm text-gray-400">Wallet: {member.wallet.slice(0, 6)}...{member.wallet.slice(-4)}</span>
-                                        <div className={`w-6 h-6 ${getRankBadgeColor('E')} rounded-full flex items-center justify-center text-xs font-bold`}>
-                                          {member.avatarId}
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  <div className="flex items-center space-x-3">
-                                    {member.isReady || starting ? (
-                                      <Badge className="bg-green-600 text-white">
-                                        {starting ? 'Joining...' : 'Ready'}
-                                      </Badge>
-                                    ) : (
-                                      <Badge variant="outline" className="border-red-500/50 text-red-400">
-                                        Not Ready
-                                      </Badge>
-                                    )}
-                                    
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      onClick={() => setExpandedPlayer(isCurrentPlayer ? (expandedPlayer ? null : member.wallet) : null)}
-                                      className="text-purple-300 hover:text-white"
-                                    >
-                                      {expandedPlayer === member.wallet ? (
-                                        <ChevronUp className="w-4 h-4" />
-                                      ) : (
-                                        <ChevronDown className="w-4 h-4" />
-                                      )}
-                                    </Button>
-                                  </div>
+                    <div className="space-y-4">
+                      <Card className="bg-purple-950/30 border-purple-600/40 hover:border-purple-500/60 transition-colors ring-2 ring-purple-500/50">
+                        <CardContent className="p-4">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-4">
+                              <Avatar className="w-12 h-12 border-2 border-purple-500/50">
+                                <AvatarImage 
+                                  src={currentUserProfile?.imageUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${authService.address}`} 
+                                  alt="Your Avatar" 
+                                />
+                                <AvatarFallback className="bg-purple-700 text-white">
+                                  {authService.address?.slice(0, 2).toUpperCase() || 'U'}
+                                </AvatarFallback>
+                              </Avatar>
+                              
+                              <div>
+                                <div className="flex items-center space-x-2">
+                                  <h3 className="font-semibold text-white">
+                                    {currentUserProfile?.displayName || 'Hunter'}
+                                    <span className="text-purple-400 ml-1">(You)</span>
+                                  </h3>
+                                  <Crown className="w-4 h-4 text-yellow-400" />
                                 </div>
-
-                                {expandedPlayer === member.wallet && isCurrentPlayer && (
-                                  <div className="mt-4 pt-4 border-t border-purple-600/30">
-                                    <div className="grid grid-cols-2 gap-4 text-sm">
-                                      <div>
-                                        <span className="text-purple-300">Wallet:</span>
-                                        <span className="text-white ml-2 font-mono">{member.wallet}</span>
-                                      </div>
-                                      <div>
-                                        <span className="text-purple-300">Class:</span>
-                                        <span className="text-white ml-2">{member.avatarId}</span>
-                                      </div>
+                                <div className="flex items-center space-x-2 mt-1">
+                                  <span className="text-sm text-gray-400">Wallet: {authService.address?.slice(0, 6)}...{authService.address?.slice(-4)}</span>
+                                  {currentUserProfile && (
+                                    <div className={`w-6 h-6 ${getRankBadgeColor(currentUserProfile.rank)} rounded-full flex items-center justify-center text-xs font-bold`}>
+                                      {currentUserProfile.rank}
                                     </div>
-                                  </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center space-x-3">
+                              <Badge className="bg-green-600 text-white">
+                                Ready
+                              </Badge>
+                              
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setExpandedPlayer(!expandedPlayer)}
+                                className="text-purple-300 hover:text-white"
+                              >
+                                {expandedPlayer ? (
+                                  <ChevronUp className="w-4 h-4" />
+                                ) : (
+                                  <ChevronDown className="w-4 h-4" />
                                 )}
-                              </CardContent>
-                            </Card>
-                            );
-                          })}
-                      </div>
-                    </ScrollArea>
+                              </Button>
+                            </div>
+                          </div>
+
+                          {expandedPlayer && currentUserProfile && (
+                            <div className="mt-4 pt-4 border-t border-purple-600/30">
+                              <div className="grid grid-cols-2 gap-4 text-sm">
+                                <div>
+                                  <span className="text-purple-300">Wallet:</span>
+                                  <span className="text-white ml-2 font-mono">{authService.address}</span>
+                                </div>
+                                <div>
+                                  <span className="text-purple-300">Rank:</span>
+                                  <span className="text-white ml-2">{currentUserProfile.rank}</span>
+                                </div>
+                                <div>
+                                  <span className="text-purple-300">Level:</span>
+                                  <span className="text-white ml-2">{currentUserProfile.level}</span>
+                                </div>
+                                <div>
+                                  <span className="text-purple-300">XP:</span>
+                                  <span className="text-white ml-2">{currentUserProfile.xp}</span>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </CardContent>
+                      </Card>
+                    </div>
                   </CardContent>
                 </Card>
               </div>
@@ -459,48 +352,20 @@ const getRarityColor = (rarity: string) => {
                   <CardContent className="p-6">
                     <h3 className="text-xl font-bold text-white mb-4">Actions</h3>
                     
-                    {!isLeader && !allReady && !currentPlayer?.isReady && (
-                      <p className="text-sm text-gray-400 mb-4">
-                        Mark yourself as ready when you're prepared to enter the gate.
-                      </p>
-                    )}
-                    
-                    {!isLeader && currentPlayer?.isReady && !starting && (
-                      <p className="text-sm text-yellow-400 mb-4">
-                        Waiting for party leader to start the dungeon...
-                      </p>
-                    )}
-                    
-                    {isLeader && !allReady && (
-                      <p className="text-sm text-red-400 mb-4">
-                        Some players are not ready. Wait for all members to be ready before starting.
-                      </p>
-                    )}
-
-                    {starting && (
-                      <p className="text-sm text-green-400 mb-4 animate-pulse">
-                        Preparing to enter {gate.name}...
-                      </p>
-                    )}
+                    <p className="text-sm text-gray-400 mb-4">
+                      You are ready to enter the dungeon. Equip your relics and start your adventure!
+                    </p>
 
                     <div className="space-y-3">
-                    <Button
-                      className={`w-full py-3 ${
-                          canStart || (!isLeader && !currentPlayer?.isReady)
-                          ? 'bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800' 
-                          : 'bg-gray-600 hover:bg-gray-700'
-                      } text-white shadow-lg`}
-                      disabled={
-                          starting ||
-                          (isLeader && !allReady) ||
-                          (!isLeader && currentPlayer?.isReady)
-                        }
-                        onClick={isLeader ? handleStartParty : handleReadyToggle}
-                    >
-                      <Sword className="w-5 h-5 mr-2" />
-                        {starting ? 'Starting...' :
-                         isLeader ? (allReady ? 'Start Dungeon' : 'Waiting for Players') :
-                         currentPlayer?.isReady ? 'Waiting for Leader' : 'Ready'}
+                      <Button
+                        className="w-full py-3 bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white shadow-lg"
+                        onClick={() => {
+                          // Handle dungeon start
+                          console.log('Starting dungeon...');
+                        }}
+                      >
+                        <Sword className="w-5 h-5 mr-2" />
+                        Enter Dungeon
                       </Button>
 
                       <Button
@@ -508,8 +373,8 @@ const getRarityColor = (rarity: string) => {
                         className="w-full border-red-500/50 text-red-400 hover:bg-red-800/40"
                         onClick={handleLeaveParty}
                       >
-                        Leave Party
-                    </Button>
+                        Back to Dungeons
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>

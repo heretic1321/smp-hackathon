@@ -3,6 +3,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagg
 import type { Request, Response } from 'express';
 import { SiweService } from './siwe.service';
 import { JwtAuthService } from './jwt.service';
+import { ProfilesService } from '../profiles/profiles.service';
 import { ZodValidationPipe } from '../core/pipes/zod-validation.pipe';
 import {
   SiweChallengeRequest,
@@ -10,6 +11,7 @@ import {
   SiweVerifyRequest,
   SiweVerifyResponse,
   AuthMeResponse,
+  AdminCheckResponse,
 } from './dto/auth.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
@@ -19,6 +21,7 @@ export class AuthController {
   constructor(
     private readonly siweService: SiweService,
     private readonly jwtService: JwtAuthService,
+    private readonly profilesService: ProfilesService,
   ) {}
 
   @Post('challenge')
@@ -85,8 +88,13 @@ export class AuthController {
   ): Promise<{ ok: true; data: { address: string } }> {
     const result = await this.siweService.verifySignature(body);
 
-    // Generate session token
-    const sessionToken = this.jwtService.generateSessionToken(result.address);
+    // Get admin status from database for JWT token
+    const player = await this.profilesService.getProfileByAddress(result.address);
+    const isAdmin = player?.isAdmin || false;
+    const roles = isAdmin ? ['user', 'admin'] : ['user'];
+
+    // Generate session token with admin status
+    const sessionToken = this.jwtService.generateSessionToken(result.address, roles);
 
     // Set HttpOnly session cookie
     // For lvh.me subdomains, we need to NOT set the domain at all to make it work
@@ -102,7 +110,7 @@ export class AuthController {
 
     response.cookie('gb_session', sessionToken, cookieOptions);
     
-    console.log('✅ Session cookie set for:', result.address);
+    console.log('✅ Session cookie set for:', result.address, 'isAdmin:', isAdmin);
     console.log('🍪 Cookie options:', cookieOptions);
 
     return {
@@ -144,13 +152,45 @@ export class AuthController {
     status: 200,
     description: 'User information retrieved successfully'
   })
-  async getCurrentUser(@Req() request: Request): Promise<{ ok: true; data: { address: string; roles: string[] } }> {
+  async getCurrentUser(@Req() request: Request): Promise<{ ok: true; data: { address: string; roles: string[]; isAdmin: boolean } }> {
     const user = (request as any).user;
+
+    // Get admin status from database
+    const player = await this.profilesService.getProfileByAddress(user.address);
+    const isAdmin = player?.isAdmin || false;
 
     return {
       ok: true,
       data: {
         address: user.address,
+        roles: user.roles,
+        isAdmin,
+      },
+    };
+  }
+
+  @Get('admin')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Check admin status',
+    description: 'Check if the current user has admin privileges'
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Admin status retrieved successfully'
+  })
+  async checkAdminStatus(@Req() request: Request): Promise<{ ok: true; data: { isAdmin: boolean; roles: string[] } }> {
+    const user = (request as any).user;
+
+    // Get admin status from database
+    const player = await this.profilesService.getProfileByAddress(user.address);
+    const isAdmin = player?.isAdmin || false;
+
+    return {
+      ok: true,
+      data: {
+        isAdmin,
         roles: user.roles,
       },
     };

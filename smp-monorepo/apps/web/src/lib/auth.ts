@@ -5,6 +5,8 @@ export interface AuthState {
   isAuthenticated: boolean;
   address: Address | null;
   isLoading: boolean;
+  isAdmin: boolean;
+  adminLoading: boolean;
 }
 
 export class AuthService {
@@ -13,6 +15,8 @@ export class AuthService {
     isAuthenticated: false,
     address: null,
     isLoading: false,
+    isAdmin: false,
+    adminLoading: false,
   };
 
   private listeners: ((state: AuthState) => void)[] = [];
@@ -56,7 +60,10 @@ export class AuthService {
         isAuthenticated: true,
         address: user.address as Address,
         isLoading: false,
+        isAdmin: user.isAdmin,
+        adminLoading: false,
       });
+      
       return true;
     } catch (error) {
       // Not authenticated or session expired
@@ -64,6 +71,8 @@ export class AuthService {
         isAuthenticated: false,
         address: null,
         isLoading: false,
+        isAdmin: false,
+        adminLoading: false,
       });
       return false;
     }
@@ -118,10 +127,15 @@ Resources:
         signature,
       });
 
+      // Get admin status from the session
+      const user = await apiClient.getMe();
+      
       this.updateState({
         isAuthenticated: true,
         address,
         isLoading: false,
+        isAdmin: user.isAdmin,
+        adminLoading: false,
       });
 
       return address;
@@ -139,6 +153,8 @@ Resources:
         isAuthenticated: false,
         address: null,
         isLoading: false,
+        isAdmin: false,
+        adminLoading: false,
       });
     } catch (error) {
       // Even if logout fails, clear local state
@@ -147,7 +163,32 @@ Resources:
         isAuthenticated: false,
         address: null,
         isLoading: false,
+        isAdmin: false,
+        adminLoading: false,
       });
+    }
+  }
+
+  async checkAdminStatus(): Promise<boolean> {
+    if (!this._state.isAuthenticated) {
+      this.updateState({ isAdmin: false, adminLoading: false });
+      return false;
+    }
+
+    try {
+      this.updateState({ adminLoading: true });
+      const user = await apiClient.getMe();
+      this.updateState({ 
+        isAdmin: user.isAdmin, 
+        adminLoading: false 
+      });
+      return user.isAdmin;
+    } catch (error) {
+      this.updateState({ 
+        isAdmin: false, 
+        adminLoading: false 
+      });
+      return false;
     }
   }
 
@@ -165,6 +206,14 @@ Resources:
 
   get isLoading(): boolean {
     return this._state.isLoading;
+  }
+
+  get isAdmin(): boolean {
+    return this._state.isAdmin;
+  }
+
+  get adminLoading(): boolean {
+    return this._state.adminLoading;
   }
 }
 

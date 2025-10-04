@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
@@ -10,7 +10,37 @@ interface HomePageProps {
 }
 
 export function HomePage({ onNavigate }: HomePageProps) {
-  const isAuthenticated = authService.isAuthenticated;
+  const [authState, setAuthState] = useState(authService.state);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [adminLoading, setAdminLoading] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = authService.subscribe(setAuthState);
+    return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      if (authState.isAuthenticated) {
+        setAdminLoading(true);
+        try {
+          const adminStatus = await authService.checkAdminStatus();
+          setIsAdmin(adminStatus);
+        } catch (error) {
+          setIsAdmin(false);
+        } finally {
+          setAdminLoading(false);
+        }
+      } else {
+        setIsAdmin(false);
+        setAdminLoading(false);
+      }
+    };
+
+    checkAdminStatus();
+  }, [authState.isAuthenticated]);
+
+  const isAuthenticated = authState.isAuthenticated;
   return (
     <div className="w-full min-h-screen relative">
       {/* Enhanced Purple Aura Background Effects */}
@@ -37,13 +67,15 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 >
                   Enter Dungeons
                 </Button>
-                <Button
-                  variant="outline"
-                  className="border-yellow-500/50 text-yellow-300 hover:bg-yellow-800/40"
-                  onClick={() => onNavigate('dev')}
-                >
-                  Dev Panel
-                </Button>
+                {isAdmin && (
+                  <Button
+                    variant="outline"
+                    className="border-yellow-500/50 text-yellow-300 hover:bg-yellow-800/40"
+                    onClick={() => onNavigate('dev')}
+                  >
+                    Dev Panel
+                  </Button>
+                )}
                 <Button
                   variant="outline"
                   className="border-purple-500/50 text-purple-300 hover:bg-purple-800/40"

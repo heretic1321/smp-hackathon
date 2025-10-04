@@ -1,6 +1,6 @@
 "use client";
 import Image, { type ImageProps } from "next/image";
-import { Button } from "@repo/ui/button";
+// import { Button } from "@repo/ui/button";
 import styles from "./page.module.css";
 import { useState, useEffect } from 'react';
 import { HomePage } from '../components/HomePage';
@@ -9,6 +9,8 @@ import { UsernameSetupPage } from '../components/UsernameSetupPage';
 import { ProfilePage } from '../components/ProfilePage';
 import { DungeonsPage } from '../components/DungeonsPage';
 import { PartyPage } from '../components/PartyPage';
+import { InventoryPage } from '../components/InventoryPage';
+import { MarketplacePage } from '../components/MarketplacePage';
 import { DevPanel } from '../components/DevPanel';
 import { authService } from '../src/lib/auth';
 import { apiClient } from '@smp/shared';
@@ -30,7 +32,7 @@ const ThemeImage = (props: Props) => {
 };
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<'home' | 'auth' | 'username-setup' | 'profile' | 'dungeons' | 'party' | 'dev'>('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'auth' | 'username-setup' | 'profile' | 'dungeons' | 'party' | 'inventory' | 'marketplace' | 'dev'>('home');
   const [selectedGateId, setSelectedGateId] = useState<string | null>(null);
   const [isCheckingSession, setIsCheckingSession] = useState(true);
 
@@ -74,7 +76,7 @@ export default function App() {
     setSelectedGateId(gateId);
     setCurrentPage('party');
   };
-
+  
   // Show loading state while checking session
   if (isCheckingSession) {
     return (
@@ -98,8 +100,12 @@ export default function App() {
         return <DungeonsPage onNavigate={setCurrentPage} onJoinDungeon={handleNavigateToParty} />;
       case 'party':
         return <PartyPage onNavigate={setCurrentPage} gateId={selectedGateId} />;
+      case 'inventory':
+        return <InventoryPage onNavigate={setCurrentPage} onNavigateToMarketplace={(relicId) => setCurrentPage('marketplace')} />;
+      case 'marketplace':
+        return <MarketplacePage onNavigate={setCurrentPage} />;
       case 'dev':
-        return <DevPanel onNavigate={setCurrentPage} />;
+        return <DevPanel onNavigate={(page: string) => setCurrentPage(page as any)} />;
       default:
         return <HomePage onNavigate={setCurrentPage} />;
     }

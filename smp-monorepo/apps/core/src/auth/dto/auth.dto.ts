@@ -35,9 +35,18 @@ export type SiweVerifyResponseDto = z.infer<typeof SiweVerifyResponse>;
 export const AuthMeResponse = z.object({
   address: Address,
   roles: z.array(z.string()),
+  isAdmin: z.boolean(),
 });
 
 export type AuthMeResponseDto = z.infer<typeof AuthMeResponse>;
+
+// Admin Check Response
+export const AdminCheckResponse = z.object({
+  isAdmin: z.boolean(),
+  roles: z.array(z.string()),
+});
+
+export type AdminCheckResponseDto = z.infer<typeof AdminCheckResponse>;
 
 // Game Session Cookie Data
 export const GameSessionData = z.object({

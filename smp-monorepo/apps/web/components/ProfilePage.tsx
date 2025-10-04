@@ -10,7 +10,7 @@ import { apiClient, type Profile } from '@smp/shared';
 import { DevPanel } from './DevPanel';
 
 interface ProfilePageProps {
-  onNavigate: (page: 'home' | 'auth' | 'username-setup' | 'profile' | 'dungeons') => void;
+  onNavigate: (page: 'home' | 'auth' | 'username-setup' | 'profile' | 'dungeons' | 'inventory' | 'marketplace') => void;
 }
 
 const getRankColor = (rank: string) => {
@@ -95,7 +95,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
   return (
     <div className="w-full min-h-screen relative">
       {/* Dev Panel Modal */}
-      {showDevPanel && <DevPanel onClose={() => setShowDevPanel(false)} />}
+      {showDevPanel && <DevPanel onNavigate={() => setShowDevPanel(false)} />}
       {/* Enhanced Purple Aura Background Effects */}
       <div className="fixed inset-0 bg-gradient-to-br from-purple-950/80 via-purple-900/70 to-slate-950/90 pointer-events-none"></div>
       <div className="fixed top-1/4 left-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl animate-pulse pointer-events-none"></div>
@@ -129,6 +129,18 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
               onClick={() => onNavigate('dungeons')}
             >
               Browse Dungeons
+            </Button>
+            <Button 
+              className="bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white shadow-xl shadow-purple-600/30"
+              onClick={() => onNavigate('inventory')}
+            >
+              Inventory
+            </Button>
+            <Button 
+              className="bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white shadow-xl shadow-purple-600/30"
+              onClick={() => onNavigate('marketplace')}
+            >
+              Marketplace
             </Button>
             <Button
               variant="outline"
