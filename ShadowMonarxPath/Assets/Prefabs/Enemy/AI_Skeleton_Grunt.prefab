@@ -1920,6 +1920,7 @@ GameObject:
   - component: {fileID: 5917789985519139975}
   - component: {fileID: 7404611886900850337}
   - component: {fileID: 8149968759294530695}
+  - component: {fileID: 5128658727626649434}
   m_Layer: 9
   m_Name: AI_Skeleton_Grunt
   m_TagString: Enemy
@@ -2088,12 +2089,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Invector.vCharacterController.AI.vControlAIMelee
   openCloseEvents: 0
   openCloseWindow: 1
-  selectedToolbar: 5
+  selectedToolbar: 12
   _isDead: 1
   _currentHealth: 0
   isImmortal: 0
   fillHealthOnStart: 1
-  _maxHealth: 100
+  _maxHealth: 40
   _healthRecovery: 0
   _healthRecoveryDelay: 0
   checkHealthEvents: []
@@ -2259,8 +2260,8 @@ MonoBehaviour:
   _minAttackCount: 1
   _maxAttackCount: 3
   _attackDistance: 1
-  _combatBlockingChance: 50
-  _onDamageBlockingChance: 25
+  _combatBlockingChance: 20
+  _onDamageBlockingChance: 12.9
   _minStayBlockingTime: 4
   _maxStayBlockingTime: 6
   _minTimeToTryBlock: 4
@@ -2352,6 +2353,20 @@ MonoBehaviour:
   defaultStaminaRecoveryDelay: 1
   defaultDefenseRate: 100
   defaultDefenseRange: 90
+--- !u!114 &5128658727626649434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6999575767344828290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDeathNotifier
+  notifyOnDeath: 1
+  notificationDelay: 0
 --- !u!1 &7053360886399189941
 GameObject:
   m_ObjectHideFlags: 0

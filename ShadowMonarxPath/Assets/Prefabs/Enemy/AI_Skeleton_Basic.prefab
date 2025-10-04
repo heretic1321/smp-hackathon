@@ -458,6 +458,7 @@ GameObject:
   - component: {fileID: 3346746349555662918}
   - component: {fileID: 5241590619693830521}
   - component: {fileID: 9138476444223084420}
+  - component: {fileID: -4086139818277726691}
   m_Layer: 9
   m_Name: AI_Skeleton_Basic
   m_TagString: Enemy
@@ -626,12 +627,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Invector.vCharacterController.AI.vControlAIMelee
   openCloseEvents: 0
   openCloseWindow: 1
-  selectedToolbar: 7
+  selectedToolbar: 13
   _isDead: 1
   _currentHealth: 0
   isImmortal: 0
   fillHealthOnStart: 1
-  _maxHealth: 60
+  _maxHealth: 25
   _healthRecovery: 0
   _healthRecoveryDelay: 0
   checkHealthEvents: []
@@ -643,7 +644,19 @@ MonoBehaviour:
       m_Calls: []
   _onDead:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onChangeHealth:
     m_PersistentCalls:
       m_Calls: []
@@ -796,8 +809,8 @@ MonoBehaviour:
   _minAttackCount: 1
   _maxAttackCount: 3
   _attackDistance: 1
-  _combatBlockingChance: 39.9
-  _onDamageBlockingChance: 22
+  _combatBlockingChance: 3.2
+  _onDamageBlockingChance: 10.1
   _minStayBlockingTime: 4
   _maxStayBlockingTime: 6
   _minTimeToTryBlock: 4
@@ -847,7 +860,7 @@ MonoBehaviour:
     attackObject: {fileID: 804090153890991137}
     isHuman: 1
   defaultDamage:
-    damageValue: 10
+    damageValue: 5.07
     staminaBlockCost: 5
     staminaRecoveryDelay: 1
     ignoreDefense: 0
@@ -889,6 +902,20 @@ MonoBehaviour:
   defaultStaminaRecoveryDelay: 1
   defaultDefenseRate: 100
   defaultDefenseRange: 90
+--- !u!114 &-4086139818277726691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1293266176274931966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDeathNotifier
+  notifyOnDeath: 1
+  notificationDelay: 0
 --- !u!1 &1317817249010796353
 GameObject:
   m_ObjectHideFlags: 0
