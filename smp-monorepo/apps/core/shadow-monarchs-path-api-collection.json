@@ -1,0 +1,1140 @@
+{
+  "info": {
+    "name": "Shadow Monarch's Path API",
+    "description": "Complete API collection for testing Shadow Monarch's Path backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{auth_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://api.lvh.me:4000",
+      "type": "string"
+    },
+    {
+      "key": "wallet_address",
+      "value": "0x742d35Cc6A3e0b6cEfF4c9CE0C8cD3B8C4e9f2423",
+      "type": "string"
+    },
+    {
+      "key": "test_image_url",
+      "value": "https://via.placeholder.com/400x400.png",
+      "type": "string"
+    },
+    {
+      "key": "session_cookie",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Health & System",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/health",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "health"]
+            },
+            "description": "Basic health check endpoint"
+          },
+          "response": []
+        },
+        {
+          "name": "Version Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/version",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "version"]
+            },
+            "description": "Get version and build information"
+          },
+          "response": []
+        },
+        {
+          "name": "Detailed Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/health/detailed",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "health", "detailed"]
+            },
+            "description": "Detailed health information with uptime"
+          },
+          "response": []
+        }
+      ],
+      "description": "System health and information endpoints"
+    },
+    {
+      "name": "2. Authentication",
+      "item": [
+        {
+          "name": "Generate Challenge",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"address\": \"{{wallet_address}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/auth/challenge",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "auth", "challenge"]
+            },
+            "description": "Generate SIWE challenge message"
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Signature",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"address\": \"{{wallet_address}}\",\n  \"message\": \"app.lvh.me wants you to sign in with your Ethereum account: 0x742d35Cc6A3e0b6cEfF4c9CE0C8cD3B8C4e9f2423\\n\\nSign in to Shadow Monarch's Path\\n\\nURI: https://app.lvh.me\\nVersion: 1\\nChain ID: 11155111\\nNonce: abc123def456...\\nIssued At: 2024-01-01T00:00:00.000Z\",\n  \"signature\": \"0x3045022100a1b2c3d4e5f6789012345678901234567890123456789012345678901234567890a022100bcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcd\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/auth/verify",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "auth", "verify"]
+            },
+            "description": "Verify SIWE signature and create session"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "{{session_cookie}}",
+                "description": "Session cookie from auth verify"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "auth", "me"]
+            },
+            "description": "Get current authenticated user information"
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "{{session_cookie}}",
+                "description": "Session cookie to clear"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "auth", "logout"]
+            },
+            "description": "Clear user session"
+          },
+          "response": []
+        }
+      ],
+      "description": "SIWE authentication endpoints"
+    },
+    {
+      "name": "3. Profile Management",
+      "item": [
+        {
+          "name": "Create Profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Cookie",
+                "value": "{{session_cookie}}",
+                "description": "Authentication cookie"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"displayName\": \"ShadowMaster\",\n  \"avatarId\": \"m_swordsman\",\n  \"imageUrl\": \"{{test_image_url}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/profile",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "profile"]
+            },
+            "description": "Create or update user profile"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Profile by Address",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/profile/{{wallet_address}}",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "profile", "{{wallet_address}}"]
+            },
+            "description": "Get profile by wallet address"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "{{session_cookie}}",
+                "description": "Authentication cookie"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/profile",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "profile"]
+            },
+            "description": "Get current authenticated user's profile"
+          },
+          "response": []
+        },
+        {
+          "name": "Leaderboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/profile/leaderboard/top?limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "profile", "leaderboard", "top"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Get top players leaderboard"
+          },
+          "response": []
+        },
+        {
+          "name": "Search Profiles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/profile/search?q=shadow&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "profile", "search"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "shadow"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Search profiles by display name"
+          },
+          "response": []
+        }
+      ],
+      "description": "Player profile management endpoints"
+    },
+    {
+      "name": "4. Gates Management",
+      "item": [
+        {
+          "name": "Get All Gates",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/gates",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "gates"]
+            },
+            "description": "Get all active gates with occupancy information"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Gate by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/gates/C_FROST",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "gates", "C_FROST"]
+            },
+            "description": "Get specific gate with occupancy information"
+          },
+          "response": []
+        },
+        {
+          "name": "Seed Gates",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "{{session_cookie}}",
+                "description": "Authentication cookie"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/gates/seed",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "gates", "seed"]
+            },
+            "description": "Seed initial gates for development"
+          },
+          "response": []
+        },
+        {
+          "name": "Join or Create Party",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "{{session_cookie}}",
+                "description": "Authentication cookie"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/gates/C_FROST/join-or-create",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "gates", "C_FROST", "join-or-create"]
+            },
+            "description": "Join existing party or create new one in gate"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Gate Occupancy",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/gates/C_FROST/occupancy",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "gates", "C_FROST", "occupancy"]
+            },
+            "description": "Get real-time occupancy information for a gate"
+          },
+          "response": []
+        }
+      ],
+      "description": "Gate management and occupancy tracking"
+    },
+    {
+      "name": "5. Parties Management",
+      "item": [
+        {
+          "name": "Join or Create Party",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "{{session_cookie}}",
+                "description": "Authentication cookie"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/party/C_FROST/join-or-create",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "party", "C_FROST", "join-or-create"]
+            },
+            "description": "Join existing party or create new one in gate"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Party Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "{{session_cookie}}",
+                "description": "Authentication cookie"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/party/{{party_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "party", "{{party_id}}"],
+              "variable": [
+                {
+                  "key": "party_id",
+                  "value": "p_12345_abc123",
+                  "description": "Party ID from join-or-create response"
+                }
+              ]
+            },
+            "description": "Get detailed party information"
+          },
+          "response": []
+        },
+        {
+          "name": "Set Ready State",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Cookie",
+                "value": "{{session_cookie}}",
+                "description": "Authentication cookie"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isReady\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/party/{{party_id}}/ready",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "party", "{{party_id}}", "ready"],
+              "variable": [
+                {
+                  "key": "party_id",
+                  "value": "p_12345_abc123"
+                }
+              ]
+            },
+            "description": "Set user's ready state in party"
+          },
+          "response": []
+        },
+        {
+          "name": "Set Lock State",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Cookie",
+                "value": "{{session_cookie}}",
+                "description": "Authentication cookie"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isLocked\": true,\n  \"equippedRelicIds\": [1, 2]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/party/{{party_id}}/lock",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "party", "{{party_id}}", "lock"],
+              "variable": [
+                {
+                  "key": "party_id",
+                  "value": "p_12345_abc123"
+                }
+              ]
+            },
+            "description": "Set user's lock state and equipment"
+          },
+          "response": []
+        },
+        {
+          "name": "Leave Party",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "{{session_cookie}}",
+                "description": "Authentication cookie"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/party/{{party_id}}/leave",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "party", "{{party_id}}", "leave"],
+              "variable": [
+                {
+                  "key": "party_id",
+                  "value": "p_12345_abc123"
+                }
+              ]
+            },
+            "description": "Leave the party"
+          },
+          "response": []
+        },
+        {
+          "name": "Start Party",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "{{session_cookie}}",
+                "description": "Authentication cookie"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/party/{{party_id}}/start",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "party", "{{party_id}}", "start"],
+              "variable": [
+                {
+                  "key": "party_id",
+                  "value": "p_12345_abc123"
+                }
+              ]
+            },
+            "description": "Start the party (leader only)"
+          },
+          "response": []
+        },
+        {
+          "name": "Party Event Stream",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "{{session_cookie}}",
+                "description": "Authentication cookie"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/party/{{party_id}}/stream",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "party", "{{party_id}}", "stream"],
+              "variable": [
+                {
+                  "key": "party_id",
+                  "value": "p_12345_abc123"
+                }
+              ]
+            },
+            "description": "Server-Sent Events stream for real-time party updates"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Start Payload",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "{{session_cookie}}",
+                "description": "Authentication cookie"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/party/{{party_id}}/start-payload",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "party", "{{party_id}}", "start-payload"],
+              "variable": [
+                {
+                  "key": "party_id",
+                  "value": "p_12345_abc123"
+                }
+              ]
+            },
+            "description": "Get payload for starting the game session"
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Parties",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "{{session_cookie}}",
+                "description": "Authentication cookie"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/party/my-parties",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "party", "my-parties"]
+            },
+            "description": "Get all parties where user is a leader or member"
+          },
+          "response": []
+        }
+      ],
+      "description": "Party management with real-time Server-Sent Events"
+    },
+    {
+      "name": "6. Runs Management",
+      "item": [
+        {
+          "name": "Finish Run",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "{{session_cookie}}",
+                "description": "Authentication cookie"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "finish_run_{{run_id}}_{{timestamp}}",
+                "description": "Idempotency key for duplicate request prevention"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bossId\": \"C_FROST_BOSS_1\",\n  \"contributions\": [\n    {\n      \"wallet\": \"{{wallet_address}}\",\n      \"damage\": 1500\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/runs/{{run_id}}/finish",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "runs", "{{run_id}}", "finish"],
+              "variable": [
+                {
+                  "key": "run_id",
+                  "value": "run_12345_abc123",
+                  "description": "Run ID from party start"
+                }
+              ]
+            },
+            "description": "Finish a run with player contributions and process rewards"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Run Results",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/runs/results/{{run_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "runs", "results", "{{run_id}}"],
+              "variable": [
+                {
+                  "key": "run_id",
+                  "value": "run_12345_abc123"
+                }
+              ]
+            },
+            "description": "Get detailed results for a completed run"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Run Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "{{session_cookie}}",
+                "description": "Authentication cookie"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/runs/{{run_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "runs", "{{run_id}}"],
+              "variable": [
+                {
+                  "key": "run_id",
+                  "value": "run_12345_abc123"
+                }
+              ]
+            },
+            "description": "Get detailed information about a run"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Recent Runs Leaderboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/runs/leaderboard/recent?limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "runs", "leaderboard", "recent"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Get the most recent completed runs for leaderboard"
+          },
+          "response": []
+        }
+      ],
+      "description": "Run management with blockchain integration and idempotency"
+    },
+    {
+      "name": "8. Leaderboards",
+      "item": [
+        {
+          "name": "Get All-Time Leaderboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/leaderboards/all-time?metric=xp&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "leaderboards", "all-time"],
+              "query": [
+                {
+                  "key": "metric",
+                  "value": "xp"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Get all-time leaderboard across all runs"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Weekly Leaderboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/leaderboards/weekly/2024-W01?metric=xp&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "leaderboards", "weekly", "2024-W01"],
+              "query": [
+                {
+                  "key": "metric",
+                  "value": "xp"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Get weekly leaderboard for a specific week"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Per-Boss Leaderboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/leaderboards/boss/C_FROST_BOSS_1?metric=damage&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "leaderboards", "boss", "C_FROST_BOSS_1"],
+              "query": [
+                {
+                  "key": "metric",
+                  "value": "damage"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Get leaderboard for a specific boss encounter"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Player Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/leaderboards/player/{{wallet_address}}",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "leaderboards", "player", "{{wallet_address}}"]
+            },
+            "description": "Get detailed statistics for a player in leaderboard context"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Leaderboard Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/leaderboards/stats",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "leaderboards", "stats"]
+            },
+            "description": "Get overall statistics about the leaderboard system"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Available Weeks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/leaderboards/weeks",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "leaderboards", "weeks"]
+            },
+            "description": "Get all weeks that have leaderboard data"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Available Bosses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/leaderboards/bosses",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "leaderboards", "bosses"]
+            },
+            "description": "Get all bosses that have leaderboard data"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current Week",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/leaderboards/current-week",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "leaderboards", "current-week"]
+            },
+            "description": "Get the current week key for weekly leaderboards"
+          },
+          "response": []
+        }
+      ],
+      "description": "Leaderboards for weekly, per-boss, and all-time rankings"
+    },
+    {
+      "name": "9. Blockchain Integration",
+      "item": [
+        {
+          "name": "Get Blockchain Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/chain/status",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "chain", "status"]
+            },
+            "description": "Get comprehensive blockchain connectivity and statistics"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Gas Price",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/chain/gas-price",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "chain", "gas-price"]
+            },
+            "description": "Get the current gas price in wei"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Network Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/chain/network",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "chain", "network"]
+            },
+            "description": "Get information about the connected blockchain network"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Block Number",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/chain/block-number",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "chain", "block-number"]
+            },
+            "description": "Get the latest block number on the blockchain"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Blockchain Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/chain/stats",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "chain", "stats"]
+            },
+            "description": "Get statistics about relics and transactions on the blockchain"
+          },
+          "response": []
+        }
+      ],
+      "description": "Blockchain connectivity and monitoring"
+    },
+    {
+      "name": "10. Media Upload",
+      "item": [
+        {
+          "name": "Upload Profile Image",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "{{session_cookie}}",
+                "description": "Authentication cookie"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": [],
+                  "description": "Image file to upload"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/media/profile-image",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "media", "profile-image"]
+            },
+            "description": "Upload profile image with content hashing"
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Relic Image",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "{{session_cookie}}",
+                "description": "Authentication cookie"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": [],
+                  "description": "Relic image file"
+                },
+                {
+                  "key": "relicType",
+                  "value": "SunspireBand",
+                  "type": "text",
+                  "description": "Type of relic"
+                },
+                {
+                  "key": "tokenId",
+                  "value": "123",
+                  "type": "text",
+                  "description": "Token ID for the relic"
+                },
+                {
+                  "key": "affixes",
+                  "value": "{\"+\":8,\"+\":2}",
+                  "type": "text",
+                  "description": "Relic attributes as JSON"
+                },
+                {
+                  "key": "rarity",
+                  "value": "Epic",
+                  "type": "text",
+                  "description": "Rarity level"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/media/relic-image",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "media", "relic-image"]
+            },
+            "description": "Upload relic image and generate metadata with content hashing"
+          },
+          "response": []
+        }
+      ],
+      "description": "Media upload endpoints with content hashing"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Development testing script - bypasses signature requirement",
+          "// In production, always use real wallet signatures",
+          "",
+          "const testAddress = pm.environment.get('wallet_address');",
+          "",
+          "// Step 1: Generate challenge",
+          "pm.sendRequest({",
+          "    url: pm.environment.get('base_url') + '/v1/auth/challenge',",
+          "    method: 'POST',",
+          "    header: {",
+          "        'Content-Type': 'application/json'",
+          "    },",
+          "    body: {",
+          "        mode: 'raw',",
+          "        raw: JSON.stringify({",
+          "            address: testAddress",
+          "        })",
+          "    }",
+          "}, function (err, response) {",
+          "    if (err) {",
+          "        console.log('Challenge generation failed:', err);",
+          "        return;",
+          "    }",
+          "",
+          "    const challengeResponse = response.json();",
+          "    console.log('Challenge generated:', challengeResponse.data.nonce);",
+          "",
+          "    // Step 2: Skip signature and manually create session",
+          "    // In development, you would normally sign the message here",
+          "    // For testing, we'll create a mock session",
+          "",
+          "    const mockSessionToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIweDc0MmQzNUNjNkEzZTBiNmNFZmY0YzljRTBDOGNEM0I4QzRlOWYyNDIzIiwicm9sZXMiOlsidXNlciJdLCJ0eXBlIjoic2Vzc2lvbiIsImlhdCI6MTcwNDA2NzIwMCwiZXhwIjoxNzA0MDcwODAwLCJpc3MiOiJzaGFkb3ctbW9uYXJjaHMtcGF0aCIsImF1ZCI6IndlYi1jbGllbnQifQ.mock_signature';",
+          "",
+          "    // Set cookie for subsequent requests",
+          "    pm.environment.set('session_cookie', 'gb_session=' + mockSessionToken);",
+          "",
+          "    console.log('Development session cookie set for testing');",
+          "",
+          "    // Step 3: Test profile creation",
+          "    pm.sendRequest({",
+          "        url: pm.environment.get('base_url') + '/v1/profile',",
+          "        method: 'POST',",
+          "        header: {",
+          "            'Content-Type': 'application/json',",
+          "            'Cookie': pm.environment.get('session_cookie')",
+          "        },",
+          "        body: {",
+          "            mode: 'raw',",
+          "            raw: JSON.stringify({",
+          "                displayName: 'TestUser',",
+          "                avatarId: 'm_swordsman',",
+          "                imageUrl: pm.environment.get('test_image_url')",
+          "            })",
+          "        }",
+          "    }, function (err, response) {",
+          "        if (err) {",
+          "            console.log('Profile creation failed:', err);",
+          "            return;",
+          "        }",
+          "",
+          "        console.log('Profile created successfully:', response.json());",
+          "",
+          "        // Step 4: Seed gates for testing",
+          "        pm.sendRequest({",
+          "            url: pm.environment.get('base_url') + '/v1/gates/seed',",
+          "            method: 'POST',",
+          "            header: {",
+          "                'Content-Type': 'application/json',",
+          "                'Cookie': pm.environment.get('session_cookie')",
+          "            }",
+          "        }, function (err, response) {",
+          "            if (err) {",
+          "                console.log('Gates seeding failed:', err);",
+          "            } else {",
+          "                console.log('Gates seeded successfully');",
+          "            }",
+          "        });",
+          "    });",
+          "});"
+        ]
+      }
+    }
+  ]
+}
+

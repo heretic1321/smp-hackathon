@@ -1,0 +1,37 @@
+{
+  "name": "@smp/shared",
+  "version": "1.0.0",
+  "description": "Shared types and utilities for Shadow Monarch's Path",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "eslint \"src/**/*.ts\" --fix",
+    "test": "jest"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "dependencies": {
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "eslint": "^9.18.0",
+    "jest": "^30.0.0",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.7.3"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "roots": ["<rootDir>/src"],
+    "testMatch": ["**/*.test.ts"],
+    "collectCoverageFrom": [
+      "**/*.{ts,tsx}",
+      "!**/*.d.ts"
+    ]
+  }
+}

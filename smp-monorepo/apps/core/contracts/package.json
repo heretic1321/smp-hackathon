@@ -1,0 +1,23 @@
+{
+  "name": "smp-contracts",
+  "version": "1.0.0",
+  "description": "Smart contracts for Shadow Monarch's Path",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:sepolia": "hardhat run scripts/deploy.ts --network baseSepolia",
+    "deploy:sbt": "hardhat run scripts/deploy-sbt-only.ts --network baseSepolia",
+    "deploy:local": "hardhat run scripts/deploy.ts --network localhost",
+    "verify": "hardhat verify --network baseSepolia"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@openzeppelin/contracts": "^5.0.0",
+    "@types/node": "^22.0.0",
+    "hardhat": "^2.22.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3"
+  }
+}
