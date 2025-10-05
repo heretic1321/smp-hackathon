@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Shadow Monarx Path</title>
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <link rel="shortcut icon" href="TemplateData/favicon.ico" />
+    <script>
+      const ORIGIN = window.location.origin
+
+      // Get return URL from query parameters
+      const urlParams = new URLSearchParams(window.location.search)
+      const returnUrl = urlParams.get('returnUrl') || urlParams.get('redirect') || null
+
+      console.log('ShadowMonarxPath: Return URL from params:', returnUrl)
+
+      function notifyReady(){ 
+        try{ 
+          parent?.postMessage({type:'UNITY_READY'}, '*') 
+          console.log('ShadowMonarxPath: Unity Ready notification sent')
+        }catch(e){
+          console.error('ShadowMonarxPath: Error in notifyReady:', e)
+        } 
+      }
+
+      // Called when game is completed successfully
+      function notifyGameComplete(gameDataJson){
+        try{
+          console.log('ShadowMonarxPath: Game completed!', gameDataJson)
+          
+          if (returnUrl && returnUrl !== window.location.origin) {
+            // Parse the game data
+            const gameData = JSON.parse(gameDataJson || '{}')
+            
+            // Build redirect URL with game completion parameters
+            const separator = returnUrl.includes('?') ? '&' : '?'
+            const redirectUrl = returnUrl + separator + 
+              'gameCompleted=true' +
+              '&completionTime=' + encodeURIComponent(gameData.completionTime || 0) +
+              '&enemiesDefeated=' + encodeURIComponent(gameData.totalEnemiesDefeated || 0) +
+              '&bossDefeated=' + encodeURIComponent(gameData.bossDefeated || false) +
+              '&lootCollected=' + encodeURIComponent(gameData.lootItemsCollected || 0) +
+              '&deathCount=' + encodeURIComponent(gameData.deathCount || 0)
+            
+            console.log('ShadowMonarxPath: Redirecting to:', redirectUrl)
+            window.location.href = redirectUrl
+          } else {
+            // Fallback to postMessage for iframe mode
+            parent?.postMessage({
+              type:'GAME_COMPLETE', 
+              payload: JSON.parse(gameDataJson || '{}')
+            }, '*')
+          }
+        }catch(e){
+          console.error('ShadowMonarxPath: Error in notifyGameComplete:', e)
+        }
+      }
+
+      // Called when player dies
+      function notifyPlayerDeath(deathDataJson){
+        try{
+          console.log('ShadowMonarxPath: Player died!', deathDataJson)
+          
+          if (returnUrl && returnUrl !== window.location.origin) {
+            // Parse the death data
+            const deathData = JSON.parse(deathDataJson || '{}')
+            
+            // Build redirect URL with death parameters
+            const separator = returnUrl.includes('?') ? '&' : '?'
+            const redirectUrl = returnUrl + separator + 
+              'playerDied=true' +
+              '&survivalTime=' + encodeURIComponent(deathData.survivalTime || 0) +
+              '&deathPhase=' + encodeURIComponent(deathData.deathPhase || 'unknown') +
+              '&enemiesDefeated=' + encodeURIComponent(deathData.totalEnemiesDefeated || 0) +
+              '&checkpointsReached=' + encodeURIComponent(deathData.checkpointsReached || 0) +
+              '&deathCount=' + encodeURIComponent(deathData.deathCount || 0)
+            
+            console.log('ShadowMonarxPath: Redirecting to:', redirectUrl)
+            window.location.href = redirectUrl
+          } else {
+            // Fallback to postMessage for iframe mode
+            parent?.postMessage({
+              type:'PLAYER_DEATH', 
+              payload: JSON.parse(deathDataJson || '{}')
+            }, '*')
+          }
+        }catch(e){
+          console.error('ShadowMonarxPath: Error in notifyPlayerDeath:', e)
+        }
+      }
+
+      // Optional: Manual exit function (if needed)
+      function notifyExit(){
+        try{
+          if (returnUrl && returnUrl !== window.location.origin) {
+            const exitUrl = returnUrl + (returnUrl.includes('?') ? '&' : '?') + 'exitFromUnity=true'
+            console.log('ShadowMonarxPath: Manual exit, redirecting to:', exitUrl)
+            window.location.href = exitUrl
+          } else {
+            parent?.postMessage({type:'EXIT_GAME'}, '*')
+          }
+        }catch(e){
+          console.error('ShadowMonarxPath: Error in notifyExit:', e)
+        }
+      }
+    </script>
+    <style>
+      #poster {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('TemplateData/poster.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+      #poster img {
+        max-width: 80%;
+        height: auto;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(255,255,255,0.1);
+      }
+      #poster.hide {
+        opacity: 0;
+        pointer-events: none;
+      }
+      #unity-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+      }
+
+      #unity-canvas {
+        width: 100vw !important;
+        height: 100vh !important;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* Hide footer completely */
+      #unity-footer {
+        display: none !important;
+      }
+
+      /* Ensure no margins or padding anywhere */
+      body, html {
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Poster that shows initially -->
+    <img id="poster" src="TemplateData/poster.png" alt="Loading Shadow Monarx Path" />
+
+    <!-- Unity container (hidden initially) -->
+    <div id="unity-container" class="unity-desktop">
+      <div id="canvas-wrap">
+        <canvas id="unity-canvas"></canvas>
+      </div>
+      <div id="unity-loading-bar">
+        <div id="unity-logo"></div>
+        <div id="unity-progress-bar-empty">
+          <div id="unity-progress-bar-full"></div>
+        </div>
+      </div>
+      <div id="unity-warning"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="TemplateData/Global.js"></script>
+    <script src="TemplateData/UnitySetup.js"></script>
+
+    <script>
+      // Force fullscreen function
+      function enterFullscreen() {
+        const element = document.documentElement;
+        if (element.requestFullscreen) {
+          element.requestFullscreen().catch(err => {
+            console.log('Error attempting to enable fullscreen:', err.message);
+          });
+        } else if (element.webkitRequestFullscreen) {
+          element.webkitRequestFullscreen();
+        } else if (element.msRequestFullscreen) {
+          element.msRequestFullscreen();
+        }
+      }
+
+      // Hide poster when Unity is ready
+      function hidePoster() {
+        const poster = document.getElementById('poster');
+        if (poster) {
+          poster.classList.add('hide');
+          setTimeout(() => poster.style.display = 'none', 500);
+        }
+      }
+
+      // Wait for Unity to initialize, then hide poster
+      window.addEventListener('load', function() {
+        // Wait a bit for Unity to initialize, then hide poster
+        setTimeout(() => {
+          hidePoster();
+          notifyReady();
+        }, 2000);
+      });
+
+      // Only attempt fullscreen on first user interaction
+      document.addEventListener('click', function() {
+        if (!document.fullscreenElement) {
+          enterFullscreen();
+        }
+      }, { once: true });
+
+      // Fallback: hide poster after 5 seconds if Unity takes too long
+      setTimeout(hidePoster, 5000);
+    </script>
+  </body>
+</html>
+
+

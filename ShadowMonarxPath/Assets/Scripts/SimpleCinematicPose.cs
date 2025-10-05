@@ -27,6 +27,18 @@ public class SimpleCinematicPose : MonoBehaviour
     [Tooltip("If set, camera will look at this target instead of using pose rotation")]
     public Transform lookAtTarget;
 
+    [Header("Camera Shake (Optional)")]
+    [Tooltip("Enable camera shake at the end of this pose")]
+    public bool enableShake = false;
+
+    [Tooltip("Intensity of the shake (0.1 = subtle, 1.0 = strong)")]
+    [Range(0.05f, 2f)]
+    public float shakeIntensity = 0.3f;
+
+    [Tooltip("Duration of the shake in seconds")]
+    [Range(0.1f, 2f)]
+    public float shakeDuration = 0.5f;
+
     [Header("Events")]
     public UnityEvent onPoseReached;
 

@@ -221,6 +221,73 @@ public class SimpleCinematicCamera : MonoBehaviour
     }
 
     /// <summary>
+    /// Camera shake effect
+    /// </summary>
+    private IEnumerator CameraShake(float intensity, float duration)
+    {
+        Vector3 originalPos = cinematicCamera.transform.position;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            // Random offset for shake
+            float x = Random.Range(-1f, 1f) * intensity;
+            float y = Random.Range(-1f, 1f) * intensity;
+            float z = Random.Range(-1f, 1f) * intensity;
+
+            // Reduce intensity over time (damping)
+            float dampening = 1f - (elapsed / duration);
+            Vector3 offset = new Vector3(x, y, z) * dampening;
+
+            cinematicCamera.transform.position = originalPos + offset;
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        // Restore to original position
+        cinematicCamera.transform.position = originalPos;
+    }
+
+    /// <summary>
+    /// Trigger camera shake during cinematic (call from external scripts)
+    /// </summary>
+    public void TriggerShake(float intensity = 0.3f, float duration = 0.5f)
+    {
+        if (isPlayingCinematic && cinematicCamera != null)
+        {
+            StartCoroutine(CameraShakeEffect(intensity, duration));
+        }
+    }
+
+    /// <summary>
+    /// Camera shake effect coroutine
+    /// </summary>
+    private IEnumerator CameraShakeEffect(float intensity, float duration)
+    {
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            // Random offset for shake
+            float x = Random.Range(-1f, 1f) * intensity;
+            float y = Random.Range(-1f, 1f) * intensity;
+            float z = Random.Range(-1f, 1f) * intensity;
+
+            // Reduce intensity over time (dampening)
+            float dampening = 1f - (elapsed / duration);
+            Vector3 shakeOffset = new Vector3(x, y, z) * dampening;
+
+            // Store current position, apply shake, then restore
+            Vector3 originalPos = cinematicCamera.transform.position;
+            cinematicCamera.transform.position = originalPos + shakeOffset;
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    /// <summary>
     /// Stop cinematic immediately
     /// </summary>
     public void StopCinematic()

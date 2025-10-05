@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadow Monarx Path - Integration Example</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #a0a0a0;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1em;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .results {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .results h2 {
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            color: #a0a0a0;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .victory {
+            color: #4ade80;
+        }
+
+        .death {
+            color: #f87171;
+        }
+
+        .info {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .info h3 {
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+
+        .info code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .json-display {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            overflow-x: auto;
+        }
+
+        .json-display pre {
+            margin: 0;
+            color: #a0a0a0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>🎮 Shadow Monarx Path</h1>
+            <p class="subtitle">Integration Example</p>
+
+            <div>
+                <button class="btn" onclick="playGame()">▶️ Play Game</button>
+                <button class="btn" onclick="clearResults()">🔄 Clear Results</button>
+            </div>
+
+            <div id="results" class="results">
+                <h2 id="results-title">Results</h2>
+                <div id="stats-container"></div>
+                <div class="json-display">
+                    <strong>Raw Data:</strong>
+                    <pre id="json-data"></pre>
+                </div>
+            </div>
+
+            <div class="info">
+                <h3>ℹ️ How This Works</h3>
+                <p>
+                    This page demonstrates how to integrate Shadow Monarx Path into your website.
+                    When you click "Play Game", it redirects to the game with a <code>returnUrl</code> parameter.
+                    When the game ends, it redirects back here with the results.
+                </p>
+                <p style="margin-top: 10px;">
+                    <strong>Game URL:</strong> <code id="game-url">https://yourgame.com/</code>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const GAME_URL = 'http://localhost:8000/'; // Change this to your game URL
+        const RETURN_URL = window.location.href.split('?')[0]; // This page
+
+        // Update displayed game URL
+        document.getElementById('game-url').textContent = GAME_URL;
+
+        // Play game function
+        function playGame() {
+            const gameUrlWithReturn = GAME_URL + '?returnUrl=' + encodeURIComponent(RETURN_URL);
+            console.log('Redirecting to:', gameUrlWithReturn);
+            window.location.href = gameUrlWithReturn;
+        }
+
+        // Clear results
+        function clearResults() {
+            document.getElementById('results').classList.remove('show');
+            // Clear URL parameters
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+        // Format time (seconds to MM:SS)
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Display results
+        function displayResults(params) {
+            const resultsDiv = document.getElementById('results');
+            const statsContainer = document.getElementById('stats-container');
+            const jsonData = document.getElementById('json-data');
+            const resultsTitle = document.getElementById('results-title');
+
+            // Clear previous results
+            statsContainer.innerHTML = '';
+
+            // Check if game completed
+            if (params.get('gameCompleted') === 'true') {
+                resultsTitle.innerHTML = '🏆 <span class="victory">Victory!</span>';
+                
+                const stats = {
+                    'Completion Time': formatTime(parseFloat(params.get('completionTime') || 0)),
+                    'Enemies Defeated': params.get('enemiesDefeated') || '0',
+                    'Boss Defeated': params.get('bossDefeated') === 'true' ? '✅ Yes' : '❌ No',
+                    'Loot Collected': params.get('lootCollected') || '0',
+                    'Death Count': params.get('deathCount') || '0'
+                };
+
+                Object.entries(stats).forEach(([label, value]) => {
+                    const statDiv = document.createElement('div');
+                    statDiv.className = 'stat';
+                    statDiv.innerHTML = `
+                        <span class="stat-label">${label}</span>
+                        <span class="stat-value">${value}</span>
+                    `;
+                    statsContainer.appendChild(statDiv);
+                });
+
+                // Display JSON
+                const jsonObj = {
+                    gameCompleted: true,
+                    completionTime: parseFloat(params.get('completionTime') || 0),
+                    enemiesDefeated: parseInt(params.get('enemiesDefeated') || 0),
+                    bossDefeated: params.get('bossDefeated') === 'true',
+                    lootCollected: parseInt(params.get('lootCollected') || 0),
+                    deathCount: parseInt(params.get('deathCount') || 0)
+                };
+                jsonData.textContent = JSON.stringify(jsonObj, null, 2);
+
+                // Send to backend (example)
+                console.log('Sending victory data to backend:', jsonObj);
+                // fetch('/api/game-complete', { method: 'POST', body: JSON.stringify(jsonObj) });
+            }
+            // Check if player died
+            else if (params.get('playerDied') === 'true') {
+                resultsTitle.innerHTML = '💀 <span class="death">Game Over</span>';
+                
+                const stats = {
+                    'Survival Time': formatTime(parseFloat(params.get('survivalTime') || 0)),
+                    'Death Phase': params.get('deathPhase') || 'Unknown',
+                    'Enemies Defeated': params.get('enemiesDefeated') || '0',
+                    'Checkpoints Reached': params.get('checkpointsReached') || '0',
+                    'Death Count': params.get('deathCount') || '0'
+                };
+
+                Object.entries(stats).forEach(([label, value]) => {
+                    const statDiv = document.createElement('div');
+                    statDiv.className = 'stat';
+                    statDiv.innerHTML = `
+                        <span class="stat-label">${label}</span>
+                        <span class="stat-value">${value}</span>
+                    `;
+                    statsContainer.appendChild(statDiv);
+                });
+
+                // Display JSON
+                const jsonObj = {
+                    playerDied: true,
+                    survivalTime: parseFloat(params.get('survivalTime') || 0),
+                    deathPhase: params.get('deathPhase') || 'Unknown',
+                    enemiesDefeated: parseInt(params.get('enemiesDefeated') || 0),
+                    checkpointsReached: parseInt(params.get('checkpointsReached') || 0),
+                    deathCount: parseInt(params.get('deathCount') || 0)
+                };
+                jsonData.textContent = JSON.stringify(jsonObj, null, 2);
+
+                // Send to backend (example)
+                console.log('Sending death data to backend:', jsonObj);
+                // fetch('/api/game-death', { method: 'POST', body: JSON.stringify(jsonObj) });
+            }
+
+            // Show results
+            resultsDiv.classList.add('show');
+        }
+
+        // Check URL parameters on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            if (urlParams.get('gameCompleted') === 'true' || urlParams.get('playerDied') === 'true') {
+                displayResults(urlParams);
+            }
+        });
+    </script>
+</body>
+</html>

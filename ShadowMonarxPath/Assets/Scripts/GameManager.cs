@@ -421,6 +421,13 @@ public class GameManager : MonoBehaviour
             Debug.Log("GameManager: Boss roar animation triggered");
         }
 
+        // Trigger camera shake at the moment of roar
+        if (bossCinematicCamera != null)
+        {
+            bossCinematicCamera.TriggerShake(0.3f, 0.5f);
+            Debug.Log("GameManager: Camera shake triggered with roar");
+        }
+
         // Wait for cinematic camera to finish
         if (bossCinematicCamera != null)
         {
