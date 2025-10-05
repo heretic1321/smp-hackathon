@@ -225,6 +225,15 @@ export class ApiClient {
     return data.data as MediaUploadResponse;
   }
 
+  // Game endpoints
+  async getGameStartData(): Promise<any> {
+    return this.request('/game/start-data');
+  }
+
+  async getGameCompletionData(): Promise<any> {
+    return this.request('/game/completion-data');
+  }
+
   // SSE connection for party events
   createPartySSEConnection(partyId: string): EventSource {
     return new EventSource(`${this.baseUrl}/party/${partyId}/stream`, {

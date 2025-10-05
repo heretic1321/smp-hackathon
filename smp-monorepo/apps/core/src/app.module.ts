@@ -14,9 +14,10 @@ import { InventoryModule } from './inventory/inventory.module';
 import { LeaderboardsModule } from './leaderboards/leaderboards.module';
 import { ChainModule } from './chain/chain.module';
 import { DevModule } from './dev/dev.module';
+import { GameModule } from './game/game.module';
 
 @Module({
-  imports: [CoreModule, DatabaseModule, AuthModule, MediaModule, ProfilesModule, GatesModule, PartiesModule, RunsModule, InventoryModule, LeaderboardsModule, ChainModule, DevModule],
+  imports: [CoreModule, DatabaseModule, AuthModule, MediaModule, ProfilesModule, GatesModule, PartiesModule, RunsModule, InventoryModule, LeaderboardsModule, ChainModule, DevModule, GameModule],
   controllers: [AppController, HealthController],
   providers: [AppService],
 })

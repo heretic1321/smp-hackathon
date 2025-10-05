@@ -12,6 +12,8 @@ import { PartyPage } from '../components/PartyPage';
 import { InventoryPage } from '../components/InventoryPage';
 import { MarketplacePage } from '../components/MarketplacePage';
 import { DevPanel } from '../components/DevPanel';
+import { GameCompletedPage } from '../components/GameCompletedPage';
+import { GameStartedPage } from '../components/GameStartedPage';
 import { authService } from '../src/lib/auth';
 import { apiClient } from '@smp/shared';
 
@@ -32,7 +34,7 @@ const ThemeImage = (props: Props) => {
 };
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<'home' | 'auth' | 'username-setup' | 'profile' | 'dungeons' | 'party' | 'inventory' | 'marketplace' | 'dev'>('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'auth' | 'username-setup' | 'profile' | 'dungeons' | 'party' | 'inventory' | 'marketplace' | 'dev' | 'gamecompleted' | 'gamestarted'>('home');
   const [selectedGateId, setSelectedGateId] = useState<string | null>(null);
   const [isCheckingSession, setIsCheckingSession] = useState(true);
 
@@ -106,6 +108,10 @@ export default function App() {
         return <MarketplacePage onNavigate={setCurrentPage} />;
       case 'dev':
         return <DevPanel onNavigate={(page: string) => setCurrentPage(page as any)} />;
+      case 'gamecompleted':
+        return <GameCompletedPage onNavigate={setCurrentPage} />;
+      case 'gamestarted':
+        return <GameStartedPage onNavigate={setCurrentPage} />;
       default:
         return <HomePage onNavigate={setCurrentPage} />;
     }

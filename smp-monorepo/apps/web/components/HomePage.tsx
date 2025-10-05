@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button } from "./ui/button";
-import { Card } from "./ui/card";
+import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { GridPattern } from "./ui/GridPattern";
@@ -30,7 +30,7 @@ import {
 } from 'lucide-react';
 
 interface HomePageProps {
-  onNavigate: (page: 'home' | 'auth' | 'username-setup' | 'profile' | 'dungeons' | 'dev') => void;
+  onNavigate: (page: 'home' | 'auth' | 'username-setup' | 'profile' | 'dungeons' | 'dev' | 'gamecompleted' | 'gamestarted') => void;
 }
 
 export function HomePage({ onNavigate }: HomePageProps) {
@@ -364,6 +364,68 @@ export function HomePage({ onNavigate }: HomePageProps) {
                   <p className="text-gray-200 text-sm">{feature.description}</p>
                 </Card>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Demo Section */}
+        <section className="py-16 sm:py-20 px-4 sm:px-6">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-12">
+              <Badge className="bg-gradient-to-r from-green-600/20 to-emerald-600/20 border border-green-500/30 text-green-300 px-4 py-2 mb-4">
+                <Play className="w-4 h-4 mr-2" />
+                Demo Pages
+              </Badge>
+              <h3 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                Experience the Game Flow
+              </h3>
+              <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+                Try out the game start and completion screens to see the full experience
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <Card className="bg-black/70 border-blue-500/50 shadow-2xl shadow-blue-700/40">
+                <CardContent className="p-8 text-center">
+                  <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-r from-green-600 to-emerald-600 rounded-full flex items-center justify-center">
+                    <Play className="w-10 h-10 text-white" />
+                  </div>
+                  <h4 className="text-2xl font-bold text-white mb-4">Game Start Screen</h4>
+                  <p className="text-gray-300 mb-6">
+                    Experience the excitement of beginning your journey as a hunter. 
+                    See your starting stats and prepare for your first dungeon.
+                  </p>
+                  <Button 
+                    size="lg"
+                    className="bg-gradient-to-r from-green-700 to-emerald-700 hover:from-green-800 hover:to-emerald-800 text-white shadow-xl shadow-green-600/30 px-8 py-4 text-lg font-semibold"
+                    onClick={() => onNavigate('gamestarted')}
+                  >
+                    <Play className="w-5 h-5 mr-2" />
+                    Start Game Demo
+                  </Button>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-black/70 border-blue-500/50 shadow-2xl shadow-blue-700/40">
+                <CardContent className="p-8 text-center">
+                  <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-r from-yellow-600 to-orange-600 rounded-full flex items-center justify-center">
+                    <Trophy className="w-10 h-10 text-white" />
+                  </div>
+                  <h4 className="text-2xl font-bold text-white mb-4">Game Complete Screen</h4>
+                  <p className="text-gray-300 mb-6">
+                    Celebrate your victory and see your achievements. 
+                    View your earned relics and progression rewards.
+                  </p>
+                  <Button 
+                    size="lg"
+                    className="bg-gradient-to-r from-yellow-700 to-orange-700 hover:from-yellow-800 hover:to-orange-800 text-white shadow-xl shadow-yellow-600/30 px-8 py-4 text-lg font-semibold"
+                    onClick={() => onNavigate('gamecompleted')}
+                  >
+                    <Trophy className="w-5 h-5 mr-2" />
+                    Complete Game Demo
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </section>
