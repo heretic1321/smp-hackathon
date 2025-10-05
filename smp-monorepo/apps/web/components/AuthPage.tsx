@@ -57,16 +57,16 @@ export function AuthPage({ onNavigate }: AuthPageProps) {
 
   return (
     <div className="w-full min-h-screen relative flex items-center justify-center p-4">
-      {/* Enhanced Purple Aura Background Effects */}
-      <div className="fixed inset-0 bg-gradient-to-br from-purple-950/80 via-purple-900/70 to-slate-950/90 pointer-events-none"></div>
-      <div className="fixed top-1/3 left-1/3 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl animate-pulse pointer-events-none"></div>
-      <div className="fixed bottom-1/3 right-1/3 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl animate-pulse delay-1000 pointer-events-none"></div>
-      <div className="fixed top-1/2 left-1/2 w-64 h-64 bg-indigo-600/15 rounded-full blur-2xl animate-pulse delay-500 pointer-events-none"></div>
+      {/* Enhanced Dark Blue Aura Background Effects */}
+      <div className="fixed inset-0 bg-gradient-to-br from-slate-950/95 via-blue-950/85 to-indigo-950/90 pointer-events-none"></div>
+      <div className="fixed top-1/3 left-1/3 w-96 h-96 bg-blue-600/25 rounded-full blur-3xl animate-pulse pointer-events-none"></div>
+      <div className="fixed bottom-1/3 right-1/3 w-80 h-80 bg-cyan-500/20 rounded-full blur-3xl animate-pulse delay-1000 pointer-events-none"></div>
+      <div className="fixed top-1/2 left-1/2 w-64 h-64 bg-sky-600/20 rounded-full blur-2xl animate-pulse delay-500 pointer-events-none"></div>
       
       {/* Back Button */}
       <Button
         variant="ghost"
-        className="absolute top-4 sm:top-6 left-4 sm:left-6 text-white hover:text-purple-200 hover:bg-purple-800/40 z-20 border border-purple-600/30"
+        className="absolute top-4 sm:top-6 left-4 sm:left-6 text-white hover:text-blue-200 hover:bg-blue-800/40 z-20 border border-blue-600/30"
         onClick={() => onNavigate('home')}
       >
         <ArrowLeft className="w-4 h-4 mr-2" />
@@ -75,9 +75,9 @@ export function AuthPage({ onNavigate }: AuthPageProps) {
 
       {/* Auth Card */}
       <div className="relative z-10 w-full max-w-md mx-auto">
-        <Card className="bg-black/90 backdrop-blur-sm border-purple-500/50 shadow-2xl shadow-purple-700/40">
+        <Card className="bg-black/90 backdrop-blur-sm border-blue-500/50 shadow-2xl shadow-blue-700/40">
           <CardHeader className="text-center">
-            <div className="w-20 h-20 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full mx-auto mb-6 flex items-center justify-center shadow-xl shadow-purple-600/30">
+            <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-full mx-auto mb-6 flex items-center justify-center shadow-xl shadow-blue-600/30">
               <Wallet className="w-8 h-8 text-white" />
             </div>
             <CardTitle className="text-2xl sm:text-3xl text-white mb-2">
@@ -97,7 +97,7 @@ export function AuthPage({ onNavigate }: AuthPageProps) {
               {connectionStatus === 'idle' && (
                 <Button 
                   onClick={connectWallet}
-                  className="w-full bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white shadow-xl shadow-purple-600/30 py-6"
+                  className="w-full bg-gradient-to-r from-blue-700 to-cyan-700 hover:from-blue-800 hover:to-cyan-800 text-white shadow-xl shadow-blue-600/30 py-6"
                   size="lg"
                 >
                   <Wallet className="w-5 h-5 mr-3" />
@@ -108,7 +108,7 @@ export function AuthPage({ onNavigate }: AuthPageProps) {
               {connectionStatus === 'connecting' && (
                 <Button 
                   disabled
-                  className="w-full bg-gradient-to-r from-purple-700 to-indigo-700 text-white py-6"
+                  className="w-full bg-gradient-to-r from-blue-700 to-cyan-700 text-white py-6"
                   size="lg"
                 >
                   <div className="w-5 h-5 mr-3 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
@@ -134,7 +134,7 @@ export function AuthPage({ onNavigate }: AuthPageProps) {
                   </div>
                   <Button
                     onClick={connectWallet}
-                    className="w-full bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white shadow-xl shadow-purple-600/30 py-6"
+                    className="w-full bg-gradient-to-r from-blue-700 to-cyan-700 hover:from-blue-800 hover:to-cyan-800 text-white shadow-xl shadow-blue-600/30 py-6"
                     size="lg"
                   >
                     <Wallet className="w-5 h-5 mr-3" />
@@ -145,19 +145,19 @@ export function AuthPage({ onNavigate }: AuthPageProps) {
             </div>
 
             {/* Wallet Requirements */}
-            <div className="bg-purple-950/50 border border-purple-600/30 rounded-lg p-4">
+            <div className="bg-blue-950/50 border border-blue-600/30 rounded-lg p-4">
               <h4 className="text-white font-semibold mb-3">Requirements:</h4>
               <ul className="text-sm text-gray-300 space-y-2">
                 <li className="flex items-center">
-                  <span className="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
+                  <span className="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
                   MetaMask wallet installed
                 </li>
                 <li className="flex items-center">
-                  <span className="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
+                  <span className="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
                   Connected to supported network
                 </li>
                 <li className="flex items-center">
-                  <span className="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
+                  <span className="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
                   Sufficient gas for transactions
                 </li>
               </ul>
@@ -168,7 +168,7 @@ export function AuthPage({ onNavigate }: AuthPageProps) {
               {[1, 2, 3, 4].map((i) => (
                 <div 
                   key={i}
-                  className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"
+                  className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
                   style={{ animationDelay: `${i * 0.4}s` }}
                 ></div>
               ))}
@@ -177,9 +177,9 @@ export function AuthPage({ onNavigate }: AuthPageProps) {
         </Card>
 
         {/* Floating Power Level */}
-        <div className="absolute -top-8 -right-4 bg-black/90 backdrop-blur-sm border border-purple-500/50 rounded-lg p-3 shadow-lg">
+        <div className="absolute -top-8 -right-4 bg-black/90 backdrop-blur-sm border border-blue-500/50 rounded-lg p-3 shadow-lg">
           <div className="text-center">
-            <p className="text-purple-300 text-xs">Connection Status</p>
+            <p className="text-blue-300 text-xs">Connection Status</p>
             <p className="text-white font-bold">
               {connectionStatus === 'idle' ? 'READY' : 
                connectionStatus === 'connecting' ? 'SYNC' :

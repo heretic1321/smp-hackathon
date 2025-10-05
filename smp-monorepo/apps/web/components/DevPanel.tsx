@@ -291,11 +291,11 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
   if (adminLoading) {
     return (
       <div className="w-full min-h-screen relative">
-        <div className="fixed inset-0 bg-gradient-to-br from-slate-950 via-purple-950/50 to-slate-900 pointer-events-none"></div>
+        <div className="fixed inset-0 bg-gradient-to-br from-slate-950 via-blue-950/50 to-indigo-950 pointer-events-none"></div>
         <div className="relative z-10 flex items-center justify-center min-h-screen">
-          <Card className="bg-black/80 border-purple-600/40 p-8">
+          <Card className="bg-black/80 border-blue-600/40 p-8">
             <CardContent className="text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-400 mx-auto mb-4"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400 mx-auto mb-4"></div>
               <p className="text-white">Checking admin access...</p>
             </CardContent>
           </Card>
@@ -308,7 +308,7 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
   if (!isAdmin) {
     return (
       <div className="w-full min-h-screen relative">
-        <div className="fixed inset-0 bg-gradient-to-br from-slate-950 via-purple-950/50 to-slate-900 pointer-events-none"></div>
+        <div className="fixed inset-0 bg-gradient-to-br from-slate-950 via-blue-950/50 to-indigo-950 pointer-events-none"></div>
         <div className="relative z-10 flex items-center justify-center min-h-screen">
           <Card className="bg-black/80 border-red-600/40 p-8 max-w-md">
             <CardHeader className="text-center">
@@ -326,7 +326,7 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
               </p>
               <Button
                 onClick={() => onNavigate('home')}
-                className="w-full bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white"
+                className="w-full bg-gradient-to-r from-blue-700 to-cyan-700 hover:from-blue-800 hover:to-cyan-800 text-white"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Home
@@ -341,19 +341,19 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
   return (
     <div className="w-full min-h-screen relative">
       {/* Background */}
-      <div className="fixed inset-0 bg-gradient-to-br from-slate-950 via-purple-950/50 to-slate-900 pointer-events-none"></div>
+      <div className="fixed inset-0 bg-gradient-to-br from-slate-950 via-blue-950/50 to-indigo-950 pointer-events-none"></div>
       
       <div className="relative z-10 flex flex-col min-h-screen">
         {/* Header */}
-        <header className="flex justify-between items-center p-6 border-b border-purple-600/30">
+        <header className="flex justify-between items-center p-6 border-b border-blue-600/30">
           <div className="flex items-center space-x-4">
-            <Code className="w-6 h-6 text-purple-400" />
+            <Code className="w-6 h-6 text-blue-400" />
             <h1 className="text-2xl font-bold text-white">Developer Panel</h1>
             <Badge className="bg-yellow-600">DEV MODE</Badge>
           </div>
           <Button
             variant="ghost"
-            className="text-white hover:text-purple-200 hover:bg-purple-800/40 border border-purple-600/30"
+            className="text-white hover:text-blue-200 hover:bg-blue-800/40 border border-blue-600/30"
             onClick={() => onNavigate('home')}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
@@ -365,24 +365,24 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
         <main className="flex-1 p-6">
           <div className="max-w-7xl mx-auto">
             <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="grid w-full grid-cols-5 bg-black/80 border border-purple-600/40">
-                <TabsTrigger value="runs" className="text-white data-[state=active]:bg-purple-700">
+              <TabsList className="grid w-full grid-cols-5 bg-black/80 border border-blue-600/40">
+                <TabsTrigger value="runs" className="text-white data-[state=active]:bg-blue-700">
                   <Rocket className="w-4 h-4 mr-2" />
                   Runs & Minting
                 </TabsTrigger>
-                <TabsTrigger value="gates" className="text-white data-[state=active]:bg-purple-700">
+                <TabsTrigger value="gates" className="text-white data-[state=active]:bg-blue-700">
                   <Database className="w-4 h-4 mr-2" />
                   Gates
                 </TabsTrigger>
-                <TabsTrigger value="profile" className="text-white data-[state=active]:bg-purple-700">
+                <TabsTrigger value="profile" className="text-white data-[state=active]:bg-blue-700">
                   <Users className="w-4 h-4 mr-2" />
                   Profile
                 </TabsTrigger>
-                <TabsTrigger value="inventory" className="text-white data-[state=active]:bg-purple-700">
+                <TabsTrigger value="inventory" className="text-white data-[state=active]:bg-blue-700">
                   <Coins className="w-4 h-4 mr-2" />
                   Inventory
                 </TabsTrigger>
-                <TabsTrigger value="health" className="text-white data-[state=active]:bg-purple-700">
+                <TabsTrigger value="health" className="text-white data-[state=active]:bg-blue-700">
                   <Trophy className="w-4 h-4 mr-2" />
                   System
                 </TabsTrigger>
@@ -390,10 +390,10 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
 
               {/* Runs & Minting Tab */}
               <TabsContent value="runs" className="space-y-6 mt-6">
-                <Card className="bg-black/80 border-purple-600/40">
+                <Card className="bg-black/80 border-blue-600/40">
                   <CardHeader>
                     <CardTitle className="text-white flex items-center">
-                      <Rocket className="w-5 h-5 mr-2 text-purple-400" />
+                      <Rocket className="w-5 h-5 mr-2 text-blue-400" />
                       Test Run Finish & Blockchain Minting
                     </CardTitle>
                     <p className="text-sm text-gray-400">
@@ -417,14 +417,14 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
                         {loading ? 'Creating...' : '2. Create Test Run'}
                       </Button>
                     </div>
-                    <div className="bg-purple-950/20 border border-purple-600/30 rounded-lg p-4">
+                    <div className="bg-blue-950/20 border border-blue-600/30 rounded-lg p-4">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <Label className="text-white">Your Address</Label>
                           <Input
                             value={testAddress}
                             disabled
-                            className="bg-black/70 border-purple-500/50 text-gray-400"
+                            className="bg-black/70 border-blue-500/50 text-gray-400"
                           />
                         </div>
                         <div>
@@ -432,7 +432,7 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
                           <Input
                             value={testAddress ? "Ready to test" : "Connect wallet first"}
                             disabled
-                            className="bg-black/70 border-purple-500/50 text-gray-400"
+                            className="bg-black/70 border-blue-500/50 text-gray-400"
                           />
                         </div>
                       </div>
@@ -445,7 +445,7 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
                           value={relicId}
                           onChange={(e) => setRelicId(e.target.value)}
                           placeholder="1 (sword), 2 (dagger), 3 (bow), etc."
-                          className="bg-black/70 border-purple-500/50 text-white"
+                          className="bg-black/70 border-blue-500/50 text-white"
                         />
                         <p className="text-xs text-gray-400 mt-1">
                           Leave empty for default sword relic (ID: 1)
@@ -456,12 +456,12 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
                     <Button
                       onClick={handleTestRunBlockchain}
                       disabled={loading || !testAddress}
-                      className="w-full bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white"
+                      className="w-full bg-gradient-to-r from-blue-700 to-cyan-700 hover:from-blue-800 hover:to-cyan-800 text-white"
                     >
                       {loading ? 'Testing...' : '🚀 Test Run & Mint Relic'}
                     </Button>
 
-                    <div className="bg-purple-950/30 border border-purple-600/30 rounded-lg p-4">
+                    <div className="bg-blue-950/30 border border-blue-600/30 rounded-lg p-4">
                       <h4 className="text-white font-semibold mb-2">Testing Flow:</h4>
                       <ul className="text-sm text-gray-300 space-y-1">
                         <li>1. ✅ Connect wallet and authenticate</li>
@@ -477,10 +477,10 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
 
               {/* Gates Tab */}
               <TabsContent value="gates" className="space-y-6 mt-6">
-                <Card className="bg-black/80 border-purple-600/40">
+                <Card className="bg-black/80 border-blue-600/40">
                   <CardHeader>
                     <CardTitle className="text-white flex items-center">
-                      <Database className="w-5 h-5 mr-2 text-purple-400" />
+                      <Database className="w-5 h-5 mr-2 text-blue-400" />
                       Seed Gates Data
                     </CardTitle>
                     <p className="text-sm text-gray-400">
@@ -491,7 +491,7 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
                     <Button
                       onClick={handleSeedGates}
                       disabled={loading}
-                      className="w-full bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white"
+                      className="w-full bg-gradient-to-r from-blue-700 to-cyan-700 hover:from-blue-800 hover:to-cyan-800 text-white"
                     >
                       {loading ? 'Seeding...' : 'Seed Gates'}
                     </Button>
@@ -509,10 +509,10 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
 
               {/* Profile Tab */}
               <TabsContent value="profile" className="space-y-6 mt-6">
-                <Card className="bg-black/80 border-purple-600/40">
+                <Card className="bg-black/80 border-blue-600/40">
                   <CardHeader>
                     <CardTitle className="text-white flex items-center">
-                      <Users className="w-5 h-5 mr-2 text-purple-400" />
+                      <Users className="w-5 h-5 mr-2 text-blue-400" />
                       Test Profile API
                     </CardTitle>
                   </CardHeader>
@@ -523,7 +523,7 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
                         id="profileAddress"
                         value={testAddress}
                         onChange={(e) => setTestAddress(e.target.value)}
-                        className="bg-black/70 border-purple-500/50 text-white"
+                        className="bg-black/70 border-blue-500/50 text-white"
                         placeholder="0x..."
                       />
                     </div>
@@ -531,7 +531,7 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
                     <Button
                       onClick={handleGetProfile}
                       disabled={loading || !testAddress}
-                      className="w-full bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white"
+                      className="w-full bg-gradient-to-r from-blue-700 to-cyan-700 hover:from-blue-800 hover:to-cyan-800 text-white"
                     >
                       {loading ? 'Loading...' : 'Get Profile'}
                     </Button>
@@ -541,10 +541,10 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
 
               {/* Inventory Tab */}
               <TabsContent value="inventory" className="space-y-6 mt-6">
-                <Card className="bg-black/80 border-purple-600/40">
+                <Card className="bg-black/80 border-blue-600/40">
                   <CardHeader>
                     <CardTitle className="text-white flex items-center">
-                      <Coins className="w-5 h-5 mr-2 text-purple-400" />
+                      <Coins className="w-5 h-5 mr-2 text-blue-400" />
                       Test Inventory API
                     </CardTitle>
                     <p className="text-sm text-gray-400">
@@ -558,7 +558,7 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
                         id="inventoryAddress"
                         value={testAddress}
                         onChange={(e) => setTestAddress(e.target.value)}
-                        className="bg-black/70 border-purple-500/50 text-white"
+                        className="bg-black/70 border-blue-500/50 text-white"
                         placeholder="0x..."
                       />
                     </div>
@@ -566,7 +566,7 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
                     <Button
                       onClick={handleGetInventory}
                       disabled={loading || !testAddress}
-                      className="w-full bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white"
+                      className="w-full bg-gradient-to-r from-blue-700 to-cyan-700 hover:from-blue-800 hover:to-cyan-800 text-white"
                     >
                       {loading ? 'Loading...' : 'Get Inventory'}
                     </Button>
@@ -576,10 +576,10 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
 
               {/* System Health Tab */}
               <TabsContent value="health" className="space-y-6 mt-6">
-                <Card className="bg-black/80 border-purple-600/40">
+                <Card className="bg-black/80 border-blue-600/40">
                   <CardHeader>
                     <CardTitle className="text-white flex items-center">
-                      <Trophy className="w-5 h-5 mr-2 text-purple-400" />
+                      <Trophy className="w-5 h-5 mr-2 text-blue-400" />
                       System Health
                     </CardTitle>
                   </CardHeader>
@@ -587,7 +587,7 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
                     <Button
                       onClick={handleCheckHealth}
                       disabled={loading}
-                      className="w-full bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white"
+                      className="w-full bg-gradient-to-r from-blue-700 to-cyan-700 hover:from-blue-800 hover:to-cyan-800 text-white"
                     >
                       {loading ? 'Checking...' : 'Check Backend Health'}
                     </Button>
@@ -598,7 +598,7 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
 
             {/* Results Display */}
             {result && (
-              <Card className="mt-6 bg-black/90 border-purple-500/50">
+              <Card className="mt-6 bg-black/90 border-blue-500/50">
                 <CardHeader>
                   <CardTitle className="text-white flex items-center justify-between">
                     <span className="flex items-center">
@@ -614,7 +614,7 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
                         href={`https://sepolia.basescan.org/tx/${result.txHash}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-purple-400 hover:text-purple-300 flex items-center"
+                        className="text-sm text-blue-400 hover:text-blue-300 flex items-center"
                       >
                         View on BaseScan
                         <ExternalLink className="w-4 h-4 ml-1" />
@@ -641,16 +641,16 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
                           </div>
                         </div>
                         
-                        <div className="bg-purple-950/30 border border-purple-600/30 rounded-lg p-3">
-                          <h5 className="text-purple-400 font-semibold mb-2">Minted Relic:</h5>
+                        <div className="bg-blue-950/30 border border-blue-600/30 rounded-lg p-3">
+                          <h5 className="text-blue-400 font-semibold mb-2">Minted Relic:</h5>
                           <div className="space-y-2">
                             <div className="flex justify-between">
                               <span className="text-white">Token ID:</span>
-                              <span className="text-purple-300">{result.relic.tokenId}</span>
+                              <span className="text-blue-300">{result.relic.tokenId}</span>
                             </div>
                             <div className="flex justify-between">
                               <span className="text-white">Type:</span>
-                              <span className="text-purple-300">{result.relic.relicType}</span>
+                              <span className="text-blue-300">{result.relic.relicType}</span>
                             </div>
                             <div className="flex justify-between">
                               <span className="text-white">IPFS CID:</span>
@@ -658,7 +658,7 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => copyToClipboard(result.relic.ipfsCid)}
-                                className="text-purple-300"
+                                className="text-blue-300"
                               >
                                 <Copy className="w-4 h-4 mr-1" />
                                 {result.relic.ipfsCid.substring(0, 8)}...
@@ -670,7 +670,7 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
                                 {Object.entries(result.relic.affixes).map(([key, value]) => (
                                   <div key={key} className="flex justify-between text-sm">
                                     <span className="text-gray-300">{key}:</span>
-                                    <span className="text-purple-300">+{String(value)}</span>
+                                    <span className="text-blue-300">+{String(value)}</span>
                                   </div>
                                 ))}
                               </div>
@@ -687,14 +687,14 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
                       <h4 className="text-white font-semibold mb-2">Minted Relics:</h4>
                       <div className="space-y-2">
                         {result.relics.map((relic: any, index: number) => (
-                          <div key={index} className="bg-purple-950/30 border border-purple-600/30 rounded-lg p-3">
+                          <div key={index} className="bg-blue-950/30 border border-blue-600/30 rounded-lg p-3">
                             <div className="flex items-center justify-between">
                               <span className="text-white">Token ID: {relic.tokenId}</span>
                               <Button
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => copyToClipboard(relic.cid)}
-                                className="text-purple-300"
+                                className="text-blue-300"
                               >
                                 <Copy className="w-4 h-4 mr-1" />
                                 CID: {relic.cid.substring(0, 8)}...
@@ -727,14 +727,14 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
             )}
 
             {/* Quick Reference */}
-            <Card className="mt-6 bg-black/80 border-purple-600/40">
+            <Card className="mt-6 bg-black/80 border-blue-600/40">
               <CardHeader>
                 <CardTitle className="text-white">Quick Reference</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                   <div>
-                    <h4 className="text-purple-400 font-semibold mb-2">API Endpoints</h4>
+                    <h4 className="text-blue-400 font-semibold mb-2">API Endpoints</h4>
                     <ul className="text-gray-300 space-y-1">
                       <li>• POST /v1/runs/:runId/finish</li>
                       <li>• GET /v1/results/:runId</li>
@@ -743,7 +743,7 @@ export function DevPanel({ onNavigate }: DevPanelProps) {
                     </ul>
                   </div>
                   <div>
-                    <h4 className="text-purple-400 font-semibold mb-2">Blockchain Actions</h4>
+                    <h4 className="text-blue-400 font-semibold mb-2">Blockchain Actions</h4>
                     <ul className="text-gray-300 space-y-1">
                       <li>• BossLog.emitBossKilled()</li>
                       <li>• Relic721.mint()</li>

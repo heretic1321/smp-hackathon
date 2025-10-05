@@ -82,7 +82,7 @@ export function PartyPage({ onNavigate, gateId }: PartyPageProps) {
           <div className="text-red-400 text-lg">{error}</div>
           <Button
             onClick={loadData}
-            className="bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white"
+            className="bg-gradient-to-r from-blue-700 to-cyan-700 hover:from-blue-800 hover:to-cyan-800 text-white"
           >
             Try Again
           </Button>
@@ -179,18 +179,18 @@ const mockRelics = [
 
   return (
     <div className="w-full min-h-screen relative">
-      {/* Enhanced Purple Aura Background Effects */}
-      <div className="fixed inset-0 bg-gradient-to-br from-purple-950/90 via-purple-900/80 to-slate-950/95 pointer-events-none"></div>
-      <div className="fixed top-1/6 left-1/6 w-[500px] h-[500px] bg-purple-600/25 rounded-full blur-3xl animate-pulse pointer-events-none"></div>
-      <div className="fixed bottom-1/5 right-1/5 w-[400px] h-[400px] bg-indigo-500/25 rounded-full blur-3xl animate-pulse delay-1000 pointer-events-none"></div>
-      <div className="fixed top-1/2 left-1/2 w-[350px] h-[350px] bg-violet-600/20 rounded-full blur-2xl animate-pulse delay-500 pointer-events-none"></div>
+      {/* Enhanced Dark Blue Aura Background Effects */}
+      <div className="fixed inset-0 bg-gradient-to-br from-slate-950/95 via-blue-950/90 to-indigo-950/95 pointer-events-none"></div>
+      <div className="fixed top-1/6 left-1/6 w-[500px] h-[500px] bg-blue-600/30 rounded-full blur-3xl animate-pulse pointer-events-none"></div>
+      <div className="fixed bottom-1/5 right-1/5 w-[400px] h-[400px] bg-cyan-500/30 rounded-full blur-3xl animate-pulse delay-1000 pointer-events-none"></div>
+      <div className="fixed top-1/2 left-1/2 w-[350px] h-[350px] bg-sky-600/25 rounded-full blur-2xl animate-pulse delay-500 pointer-events-none"></div>
       
       <div className="relative z-10 flex flex-col min-h-screen">
         {/* Header */}
         <header className="flex flex-col sm:flex-row justify-between items-center p-4 sm:p-6 gap-4">
           <Button
             variant="ghost"
-            className="text-white hover:text-purple-200 hover:bg-purple-800/40 border border-purple-600/30"
+            className="text-white hover:text-blue-200 hover:bg-blue-800/40 border border-blue-600/30"
             onClick={() => onNavigate('dungeons')}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
@@ -198,7 +198,7 @@ const mockRelics = [
           </Button>
           
           <div className="flex items-center space-x-4">
-            <Badge className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white border-0 px-4 py-2">
+            <Badge className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white border-0 px-4 py-2">
               <Sword className="w-4 h-4 mr-2" />
               Dungeon Preparation
             </Badge>
@@ -210,7 +210,7 @@ const mockRelics = [
           <div className="max-w-7xl mx-auto">
             {/* Gate Info Section */}
             <div className="mb-8">
-              <Card className="bg-black/90 border-purple-500/50 shadow-2xl shadow-purple-700/30 overflow-hidden">
+              <Card className="bg-black/90 border-blue-500/50 shadow-2xl shadow-blue-700/30 overflow-hidden">
                 <div className="relative">
                   {/* Large Gate Image */}
                   <div className="aspect-[21/9] relative overflow-hidden">
@@ -232,7 +232,7 @@ const mockRelics = [
                         {gate.name}
                       </h1>
                       <div className="flex flex-wrap items-center gap-4">
-                        <Badge variant="outline" className="border-purple-500/50 text-purple-300 text-sm">
+                        <Badge variant="outline" className="border-blue-500/50 text-blue-300 text-sm">
                           {gate.rank} Rank
                         </Badge>
                         <div className="flex items-center space-x-2 text-gray-300">
@@ -253,26 +253,26 @@ const mockRelics = [
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Solo Hunter Display */}
               <div className="lg:col-span-2">
-                <Card className="bg-black/90 border-purple-500/50 shadow-2xl shadow-purple-700/30">
+                <Card className="bg-black/90 border-blue-500/50 shadow-2xl shadow-blue-700/30">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between mb-6">
                       <h2 className="text-2xl font-bold text-white">Solo Hunter</h2>
-                      <Badge className="bg-purple-600/20 border border-purple-500/30 text-purple-300 px-3 py-1">
+                      <Badge className="bg-blue-600/20 border border-blue-500/30 text-blue-300 px-3 py-1">
                         1 / {gate.capacity}
                       </Badge>
                     </div>
 
                     <div className="space-y-4">
-                      <Card className="bg-purple-950/30 border-purple-600/40 hover:border-purple-500/60 transition-colors ring-2 ring-purple-500/50">
+                      <Card className="bg-blue-950/30 border-blue-600/40 hover:border-blue-500/60 transition-colors ring-2 ring-blue-500/50">
                         <CardContent className="p-4">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-4">
-                              <Avatar className="w-12 h-12 border-2 border-purple-500/50">
+                              <Avatar className="w-12 h-12 border-2 border-blue-500/50">
                                 <AvatarImage 
                                   src={currentUserProfile?.imageUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${authService.address}`} 
                                   alt="Your Avatar" 
                                 />
-                                <AvatarFallback className="bg-purple-700 text-white">
+                                <AvatarFallback className="bg-blue-700 text-white">
                                   {authService.address?.slice(0, 2).toUpperCase() || 'U'}
                                 </AvatarFallback>
                               </Avatar>
@@ -281,7 +281,7 @@ const mockRelics = [
                                 <div className="flex items-center space-x-2">
                                   <h3 className="font-semibold text-white">
                                     {currentUserProfile?.displayName || 'Hunter'}
-                                    <span className="text-purple-400 ml-1">(You)</span>
+                                    <span className="text-blue-400 ml-1">(You)</span>
                                   </h3>
                                   <Crown className="w-4 h-4 text-yellow-400" />
                                 </div>
@@ -305,7 +305,7 @@ const mockRelics = [
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => setExpandedPlayer(!expandedPlayer)}
-                                className="text-purple-300 hover:text-white"
+                                className="text-blue-300 hover:text-white"
                               >
                                 {expandedPlayer ? (
                                   <ChevronUp className="w-4 h-4" />
@@ -317,22 +317,22 @@ const mockRelics = [
                           </div>
 
                           {expandedPlayer && currentUserProfile && (
-                            <div className="mt-4 pt-4 border-t border-purple-600/30">
+                            <div className="mt-4 pt-4 border-t border-blue-600/30">
                               <div className="grid grid-cols-2 gap-4 text-sm">
                                 <div>
-                                  <span className="text-purple-300">Wallet:</span>
+                                  <span className="text-blue-300">Wallet:</span>
                                   <span className="text-white ml-2 font-mono">{authService.address}</span>
                                 </div>
                                 <div>
-                                  <span className="text-purple-300">Rank:</span>
+                                  <span className="text-blue-300">Rank:</span>
                                   <span className="text-white ml-2">{currentUserProfile.rank}</span>
                                 </div>
                                 <div>
-                                  <span className="text-purple-300">Level:</span>
+                                  <span className="text-blue-300">Level:</span>
                                   <span className="text-white ml-2">{currentUserProfile.level}</span>
                                 </div>
                                 <div>
-                                  <span className="text-purple-300">XP:</span>
+                                  <span className="text-blue-300">XP:</span>
                                   <span className="text-white ml-2">{currentUserProfile.xp}</span>
                                 </div>
                               </div>
@@ -348,7 +348,7 @@ const mockRelics = [
               {/* Actions and Relics Panel */}
               <div className="space-y-6">
                 {/* Action Button */}
-                <Card className="bg-black/90 border-purple-500/50 shadow-2xl shadow-purple-700/30">
+                <Card className="bg-black/90 border-blue-500/50 shadow-2xl shadow-blue-700/30">
                   <CardContent className="p-6">
                     <h3 className="text-xl font-bold text-white mb-4">Actions</h3>
                     
@@ -358,7 +358,7 @@ const mockRelics = [
 
                     <div className="space-y-3">
                       <Button
-                        className="w-full py-3 bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white shadow-lg"
+                        className="w-full py-3 bg-gradient-to-r from-blue-700 to-cyan-700 hover:from-blue-800 hover:to-cyan-800 text-white shadow-lg"
                         onClick={() => {
                           // Handle dungeon start
                           console.log('Starting dungeon...');
@@ -380,11 +380,11 @@ const mockRelics = [
                 </Card>
 
                 {/* Relics Panel */}
-                <Card className="bg-black/90 border-purple-500/50 shadow-2xl shadow-purple-700/30">
+                <Card className="bg-black/90 border-blue-500/50 shadow-2xl shadow-blue-700/30">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="text-xl font-bold text-white">Relics</h3>
-                      <Badge className="bg-purple-600/20 border border-purple-500/30 text-purple-300 px-2 py-1 text-xs">
+                      <Badge className="bg-blue-600/20 border border-blue-500/30 text-blue-300 px-2 py-1 text-xs">
                         {equippedRelics.length}/3 Equipped
                       </Badge>
                     </div>
@@ -393,19 +393,19 @@ const mockRelics = [
                       <DialogTrigger asChild>
                         <Button 
                           variant="outline" 
-                          className="w-full border-purple-500/50 text-purple-200 bg-purple-700 hover:bg-purple-800/80 hover:text-white hover:border-purple-800 mb-4"
+                          className="w-full border-blue-500/50 text-blue-200 bg-blue-700 hover:bg-blue-800/80 hover:text-white hover:border-blue-800 mb-4"
                         >
                           <Gem className="w-4 h-4 mr-2" />
                           Manage Relics
                         </Button>
                       </DialogTrigger>
-                      <DialogContent className="bg-black/95 border-purple-500/50 text-white max-w-2xl max-h-[90vh] overflow-y-auto">
+                      <DialogContent className="bg-black/95 border-blue-500/50 text-white max-w-2xl max-h-[90vh] overflow-y-auto">
                         <DialogHeader>
                           <DialogTitle className="text-2xl text-white flex items-center space-x-3">
-                            <Gem className="w-6 h-6 text-purple-400" />
+                            <Gem className="w-6 h-6 text-blue-400" />
                             <span>Your Relics</span>
                           </DialogTitle>
-                          <DialogDescription className="text-purple-200">
+                          <DialogDescription className="text-blue-200">
                             Equip up to 3 relics to enhance your abilities in the dungeon. Click on relics to equip or unequip them.
                           </DialogDescription>
                         </DialogHeader>
@@ -420,8 +420,8 @@ const mockRelics = [
                                   key={relic.id} 
                                   className={`cursor-pointer transition-all hover:shadow-lg ${
                                     isEquipped 
-                                      ? 'bg-purple-950/50 border-purple-400 shadow-purple-400/20' 
-                                      : 'bg-gray-950/50 border-gray-600/30 hover:border-purple-500/50'
+                                      ? 'bg-blue-950/50 border-blue-400 shadow-blue-400/20' 
+                                      : 'bg-gray-950/50 border-gray-600/30 hover:border-blue-500/50'
                                   }`}
                                   onClick={() => handleEquipRelic(relic.id)}
                                 >
@@ -483,7 +483,7 @@ const mockRelics = [
 
                     {/* Currently Equipped Relics Preview */}
                     <div className="space-y-2">
-                      <p className="text-sm text-purple-300">Currently Equipped:</p>
+                      <p className="text-sm text-blue-300">Currently Equipped:</p>
                       {equippedRelics.length > 0 ? (
                         <div className="space-y-2">
                           {equippedRelics.map(relicId => {
@@ -491,7 +491,7 @@ const mockRelics = [
                             if (!relic) return null;
                             
                             return (
-                              <div key={relicId} className="flex items-center space-x-2 bg-purple-950/30 border border-purple-600/30 rounded-lg p-2">
+                              <div key={relicId} className="flex items-center space-x-2 bg-blue-950/30 border border-blue-600/30 rounded-lg p-2">
                                 <ImageWithFallback
                                   src={relic.image}
                                   alt={relic.name}
@@ -499,7 +499,7 @@ const mockRelics = [
                                 />
                                 <div className="flex-1 min-w-0">
                                   <p className="text-sm font-medium text-white truncate">{relic.name}</p>
-                                  <p className="text-xs text-purple-300">{relic.type}</p>
+                                  <p className="text-xs text-blue-300">{relic.type}</p>
                                 </div>
                               </div>
                             );

@@ -96,18 +96,18 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
     <div className="w-full min-h-screen relative">
       {/* Dev Panel Modal */}
       {showDevPanel && <DevPanel onNavigate={() => setShowDevPanel(false)} />}
-      {/* Enhanced Purple Aura Background Effects */}
-      <div className="fixed inset-0 bg-gradient-to-br from-purple-950/80 via-purple-900/70 to-slate-950/90 pointer-events-none"></div>
-      <div className="fixed top-1/4 left-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl animate-pulse pointer-events-none"></div>
-      <div className="fixed bottom-1/4 right-1/4 w-80 h-80 bg-indigo-500/20 rounded-full blur-3xl animate-pulse delay-1000 pointer-events-none"></div>
-      <div className="fixed top-1/2 left-1/2 w-64 h-64 bg-violet-600/15 rounded-full blur-2xl animate-pulse delay-500 pointer-events-none"></div>
+      {/* Enhanced Dark Blue Aura Background Effects */}
+      <div className="fixed inset-0 bg-gradient-to-br from-slate-950/95 via-blue-950/85 to-indigo-950/90 pointer-events-none"></div>
+      <div className="fixed top-1/4 left-1/4 w-96 h-96 bg-blue-600/25 rounded-full blur-3xl animate-pulse pointer-events-none"></div>
+      <div className="fixed bottom-1/4 right-1/4 w-80 h-80 bg-cyan-500/20 rounded-full blur-3xl animate-pulse delay-1000 pointer-events-none"></div>
+      <div className="fixed top-1/2 left-1/2 w-64 h-64 bg-sky-600/20 rounded-full blur-2xl animate-pulse delay-500 pointer-events-none"></div>
       
       <div className="relative z-10 flex flex-col min-h-screen">
         {/* Header */}
         <header className="flex flex-col sm:flex-row justify-between items-center p-4 sm:p-6 gap-4">
           <Button
             variant="ghost"
-            className="text-white hover:text-purple-200 hover:bg-purple-800/40 border border-purple-600/30"
+            className="text-white hover:text-blue-200 hover:bg-blue-800/40 border border-blue-600/30"
             onClick={() => onNavigate('home')}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
@@ -125,26 +125,26 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
               </Button>
             )}
             <Button
-              className="bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white shadow-xl shadow-purple-600/30"
+                className="bg-gradient-to-r from-blue-700 to-cyan-700 hover:from-blue-800 hover:to-cyan-800 text-white shadow-xl shadow-blue-600/30"
               onClick={() => onNavigate('dungeons')}
             >
               Browse Dungeons
             </Button>
             <Button 
-              className="bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white shadow-xl shadow-purple-600/30"
+                className="bg-gradient-to-r from-blue-700 to-cyan-700 hover:from-blue-800 hover:to-cyan-800 text-white shadow-xl shadow-blue-600/30"
               onClick={() => onNavigate('inventory')}
             >
               Inventory
             </Button>
             <Button 
-              className="bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white shadow-xl shadow-purple-600/30"
+                className="bg-gradient-to-r from-blue-700 to-cyan-700 hover:from-blue-800 hover:to-cyan-800 text-white shadow-xl shadow-blue-600/30"
               onClick={() => onNavigate('marketplace')}
             >
               Marketplace
             </Button>
             <Button
               variant="outline"
-              className="border-purple-500/50 text-purple-700 hover:bg-purple-800/40 hover:text-white"
+              className="border-blue-500/50 text-blue-700 hover:bg-blue-800/40 hover:text-white"
               onClick={handleSignOut}
             >
               <LogOut className="w-4 h-4 mr-2" />
@@ -158,12 +158,12 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
           <div className="max-w-6xl mx-auto">
             {/* Profile Header */}
             <div className="mb-8">
-              <Card className="bg-black/90 border-purple-500/50 shadow-2xl shadow-purple-700/40">
+              <Card className="bg-black/90 border-blue-500/50 shadow-2xl shadow-blue-700/40">
                 <CardContent className="p-6">
                   <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
                     {/* Avatar */}
                     <div className="relative">
-                      <div className="w-24 h-24 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full flex items-center justify-center shadow-xl shadow-purple-600/30">
+                      <div className="w-24 h-24 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-full flex items-center justify-center shadow-xl shadow-blue-600/30">
                         <Crown className="w-12 h-12 text-white" />
                       </div>
                       <div className={`absolute -bottom-2 -right-2 w-8 h-8 bg-gradient-to-r ${getRankColor(profile.rank)} rounded-full flex items-center justify-center text-white font-bold shadow-lg`}>
@@ -180,7 +180,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                         <Badge className={`bg-gradient-to-r ${getRankColor(profile.rank)} text-white border-0`}>
                           Rank {profile.rank}
                         </Badge>
-                        <Badge variant="outline" className="border-purple-500/50 text-purple-300">
+                        <Badge variant="outline" className="border-blue-500/50 text-blue-300">
                           Level {profile.level}
                         </Badge>
                         <Badge variant="outline" className="border-indigo-500/50 text-indigo-300">
@@ -196,20 +196,20 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                         </div>
                         <Progress
                           value={experiencePercentage}
-                          className="h-3 bg-slate-800 border border-purple-600/30"
+                          className="h-3 bg-slate-800 border border-blue-600/30"
                         />
                       </div>
                     </div>
 
                     {/* Quick Stats */}
                     <div className="grid grid-cols-2 gap-4 text-center">
-                      <div className="bg-purple-950/50 border border-purple-600/30 rounded-lg p-3">
+                      <div className="bg-blue-950/50 border border-blue-600/30 rounded-lg p-3">
                         <p className="text-2xl font-bold text-white">-</p>
-                        <p className="text-xs text-purple-300">Total Kills</p>
+                        <p className="text-xs text-blue-300">Total Kills</p>
                       </div>
-                      <div className="bg-purple-950/50 border border-purple-600/30 rounded-lg p-3">
+                      <div className="bg-blue-950/50 border border-blue-600/30 rounded-lg p-3">
                         <p className="text-2xl font-bold text-white">-</p>
-                        <p className="text-xs text-purple-300">Bosses</p>
+                        <p className="text-xs text-blue-300">Bosses</p>
                       </div>
                     </div>
                   </div>
@@ -219,14 +219,14 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
 
             {/* Tabs */}
             <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="grid w-full grid-cols-3 bg-black/80 border border-purple-600/40">
-                <TabsTrigger value="overview" className="text-white data-[state=active]:bg-purple-700 data-[state=active]:text-white">
+              <TabsList className="grid w-full grid-cols-3 bg-black/80 border border-blue-600/40">
+                <TabsTrigger value="overview" className="text-white data-[state=active]:bg-blue-700 data-[state=active]:text-white">
                   Overview
                 </TabsTrigger>
-                <TabsTrigger value="dungeons" className="text-white data-[state=active]:bg-purple-700 data-[state=active]:text-white">
+                <TabsTrigger value="dungeons" className="text-white data-[state=active]:bg-blue-700 data-[state=active]:text-white">
                   Dungeons
                 </TabsTrigger>
-                <TabsTrigger value="achievements" className="text-white data-[state=active]:bg-purple-700 data-[state=active]:text-white">
+                <TabsTrigger value="achievements" className="text-white data-[state=active]:bg-blue-700 data-[state=active]:text-white">
                   Achievements
                 </TabsTrigger>
               </TabsList>
@@ -240,7 +240,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                     { icon: Target, label: "Rare Items", value: "-", color: "text-purple-400" },
                     { icon: Calendar, label: "Hours Played", value: "-", color: "text-blue-400" }
                   ].map((stat, index) => (
-                    <Card key={index} className="bg-black/80 border-purple-600/40 hover:border-purple-500/60 transition-colors">
+                    <Card key={index} className="bg-black/80 border-blue-600/40 hover:border-blue-500/60 transition-colors">
                       <CardContent className="p-4 text-center">
                         <stat.icon className={`w-8 h-8 ${stat.color} mx-auto mb-2`} />
                         <p className="text-2xl font-bold text-white">{stat.value}</p>
@@ -250,22 +250,22 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                   ))}
                 </div>
 
-                <Card className="bg-black/80 border-purple-600/40">
+                <Card className="bg-black/80 border-blue-600/40">
                   <CardHeader>
                     <CardTitle className="text-white flex items-center">
-                      <MapPin className="w-5 h-5 mr-2 text-purple-400" />
+                      <MapPin className="w-5 h-5 mr-2 text-blue-400" />
                       Hunter Information
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="text-gray-300">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <p><span className="text-purple-400">Wallet:</span> {profile.wallet.slice(0, 6)}...{profile.wallet.slice(-4)}</p>
-                        <p><span className="text-purple-400">Class:</span> {profile.avatarId}</p>
+                        <p><span className="text-blue-400">Wallet:</span> {profile.wallet.slice(0, 6)}...{profile.wallet.slice(-4)}</p>
+                        <p><span className="text-blue-400">Class:</span> {profile.avatarId}</p>
                       </div>
                       <div>
-                        <p><span className="text-purple-400">Current Rank:</span> {profile.rank}</p>
-                        <p><span className="text-purple-400">Level:</span> {profile.level}</p>
+                        <p><span className="text-blue-400">Current Rank:</span> {profile.rank}</p>
+                        <p><span className="text-blue-400">Level:</span> {profile.level}</p>
                       </div>
                     </div>
                   </CardContent>
@@ -274,7 +274,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
 
               {/* Dungeons Tab */}
               <TabsContent value="dungeons" className="space-y-4 mt-6">
-                <Card className="bg-black/80 border-purple-600/40">
+                <Card className="bg-black/80 border-blue-600/40">
                   <CardHeader>
                     <CardTitle className="text-white">Cleared Dungeons (0)</CardTitle>
                   </CardHeader>
@@ -297,10 +297,10 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                     { title: "Legend", description: "Reach Rank S", completed: false },
                     { title: "Nightmare Slayer", description: "Clear all S-rank dungeons", completed: false }
                   ].map((achievement, index) => (
-                    <Card key={index} className={`border-purple-600/40 ${achievement.completed ? 'bg-purple-950/30' : 'bg-black/60'}`}>
+                    <Card key={index} className={`border-blue-600/40 ${achievement.completed ? 'bg-blue-950/30' : 'bg-black/60'}`}>
                       <CardContent className="p-4">
                         <div className="flex items-center space-x-3">
-                          <div className={`w-12 h-12 rounded-full flex items-center justify-center ${achievement.completed ? 'bg-purple-600' : 'bg-gray-600'}`}>
+                          <div className={`w-12 h-12 rounded-full flex items-center justify-center ${achievement.completed ? 'bg-blue-600' : 'bg-gray-600'}`}>
                             <Trophy className="w-6 h-6 text-white" />
                           </div>
                           <div>

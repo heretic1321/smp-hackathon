@@ -55,7 +55,7 @@ export function DungeonsPage({ onNavigate, onJoinDungeon }: DungeonsPageProps) {
                     <div className="text-red-400 text-lg">{error}</div>
                     <Button
                         onClick={loadGates}
-                        className="bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white"
+                        className="bg-gradient-to-r from-blue-700 to-cyan-700 hover:from-blue-800 hover:to-cyan-800 text-white"
                     >
                         Try Again
                     </Button>
@@ -90,20 +90,20 @@ const getRankBadgeColor = (rank: string) => {
 
     return (
         <div className="w-full min-h-screen relative">
-            {/* Enhanced Purple Aura Background Effects - More intense for dungeons */}
-            <div className="fixed inset-0 bg-gradient-to-br from-purple-950/90 via-purple-900/80 to-slate-950/95 pointer-events-none"></div>
-            <div className="fixed top-1/6 left-1/6 w-[500px] h-[500px] bg-purple-600/25 rounded-full blur-3xl animate-pulse pointer-events-none"></div>
-            <div className="fixed bottom-1/5 right-1/5 w-[400px] h-[400px] bg-indigo-500/25 rounded-full blur-3xl animate-pulse delay-1000 pointer-events-none"></div>
-            <div className="fixed top-1/2 left-1/2 w-[350px] h-[350px] bg-violet-600/20 rounded-full blur-2xl animate-pulse delay-500 pointer-events-none"></div>
-            <div className="fixed top-3/4 left-1/8 w-[300px] h-[300px] bg-purple-700/15 rounded-full blur-2xl animate-pulse delay-300 pointer-events-none"></div>
-            <div className="fixed top-1/8 right-1/3 w-[250px] h-[250px] bg-indigo-600/18 rounded-full blur-2xl animate-pulse delay-700 pointer-events-none"></div>
+            {/* Enhanced Dark Blue Aura Background Effects - More intense for dungeons */}
+            <div className="fixed inset-0 bg-gradient-to-br from-slate-950/95 via-blue-950/90 to-indigo-950/95 pointer-events-none"></div>
+            <div className="fixed top-1/6 left-1/6 w-[500px] h-[500px] bg-blue-600/30 rounded-full blur-3xl animate-pulse pointer-events-none"></div>
+            <div className="fixed bottom-1/5 right-1/5 w-[400px] h-[400px] bg-cyan-500/30 rounded-full blur-3xl animate-pulse delay-1000 pointer-events-none"></div>
+            <div className="fixed top-1/2 left-1/2 w-[350px] h-[350px] bg-sky-600/25 rounded-full blur-2xl animate-pulse delay-500 pointer-events-none"></div>
+            <div className="fixed top-3/4 left-1/8 w-[300px] h-[300px] bg-blue-700/20 rounded-full blur-2xl animate-pulse delay-300 pointer-events-none"></div>
+            <div className="fixed top-1/8 right-1/3 w-[250px] h-[250px] bg-indigo-600/22 rounded-full blur-2xl animate-pulse delay-700 pointer-events-none"></div>
 
             <div className="relative z-10 flex flex-col min-h-screen">
                 {/* Header */}
                 <header className="flex flex-col sm:flex-row justify-between items-center p-4 sm:p-6 gap-4">
                     <Button
                         variant="ghost"
-                        className="text-white hover:text-purple-200 hover:bg-purple-800/40 border border-purple-600/30"
+                        className="text-white hover:text-blue-200 hover:bg-blue-800/40 border border-blue-600/30"
                         onClick={() => onNavigate('profile')}
                     >
                         <ArrowLeft className="w-4 h-4 mr-2" />
@@ -111,7 +111,7 @@ const getRankBadgeColor = (rank: string) => {
                     </Button>
 
                     <div className="flex items-center space-x-4">
-                        <Badge className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white border-0 px-4 py-2">
+                        <Badge className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white border-0 px-4 py-2">
                             <Crown className="w-4 h-4 mr-2" />
                             Active Dungeons
                         </Badge>
@@ -126,7 +126,7 @@ const getRankBadgeColor = (rank: string) => {
                             <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
                                 Shadow Dungeons
                             </h1>
-                            <p className="text-xl text-purple-200 max-w-3xl mx-auto">
+                            <p className="text-xl text-blue-200 max-w-3xl mx-auto">
                                 Enter mystical dungeons filled with shadow creatures and valuable treasures. Choose your challenge wisely, Hunter.
                             </p>
                         </div>
@@ -138,7 +138,7 @@ const getRankBadgeColor = (rank: string) => {
                                 const maxCapacity = gate.capacity;
 
                                 return (
-                                    <Card key={gate.id} className="bg-black/90 border-purple-500/50 shadow-2xl shadow-purple-700/30 hover:shadow-purple-600/40 hover:border-purple-400/70 transition-all duration-300 group overflow-hidden">
+                                    <Card key={gate.id} className="bg-black/90 border-blue-500/50 shadow-2xl shadow-blue-700/30 hover:shadow-blue-600/40 hover:border-blue-400/70 transition-all duration-300 group overflow-hidden">
                                     <div className="relative">
                                         {/* Dungeon Image */}
                                         <div className="aspect-video relative overflow-hidden">
@@ -156,19 +156,19 @@ const getRankBadgeColor = (rank: string) => {
 
                                             {/* Player Count */}
                                             <div className="absolute top-3 right-3 bg-black/80 backdrop-blur-sm rounded-lg px-3 py-1 flex items-center space-x-1">
-                                                <Users className="w-4 h-4 text-purple-300" />
+                                                <Users className="w-4 h-4 text-blue-300" />
                                                     <span className="text-white font-semibold">{totalOccupancy}/{maxCapacity}</span>
                                             </div>
                                         </div>
 
                                         {/* Card Content */}
                                         <CardContent className="p-4">
-                                            <h3 className="text-lg font-bold text-white mb-2 group-hover:text-purple-200 transition-colors">
+                                            <h3 className="text-lg font-bold text-white mb-2 group-hover:text-blue-200 transition-colors">
                                                     {gate.name}
                                             </h3>
 
                                             <div className="flex items-center justify-between mb-4">
-                                                <Badge variant="outline" className="border-purple-500/50 text-purple-300">
+                                                <Badge variant="outline" className="border-blue-500/50 text-blue-300">
                                                         {gate.rank} Rank
                                                 </Badge>
                                                 <div className="flex items-center space-x-1 text-sm text-gray-400">
@@ -180,7 +180,7 @@ const getRankBadgeColor = (rank: string) => {
                                             {/* Action Buttons */}
                                             <div className="flex space-x-2">
                                                 <Button
-                                                    className="flex-1 bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white shadow-lg"
+                                                    className="flex-1 bg-gradient-to-r from-blue-700 to-cyan-700 hover:from-blue-800 hover:to-cyan-800 text-white shadow-lg"
                                                         disabled={totalOccupancy >= maxCapacity}
                                                         onClick={() => onJoinDungeon(gate.id)}
                                                 >
@@ -192,13 +192,13 @@ const getRankBadgeColor = (rank: string) => {
                                                     <DialogTrigger asChild>
                                                         <Button
                                                             variant="outline"
-                                                            className="bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white shadow-lg"
+                                                            className="bg-gradient-to-r from-blue-700 to-cyan-700 hover:from-blue-800 hover:to-cyan-800 text-white shadow-lg"
                                                                 onClick={() => setSelectedGate(gate)}
                                                         >
                                                             <Info className="w-4 h-4" />
                                                         </Button>
                                                     </DialogTrigger>
-                                                    <DialogContent className="bg-black/95 border-purple-500/50 text-white max-w-2xl max-h-[90vh] overflow-y-auto">
+                                                    <DialogContent className="bg-black/95 border-blue-500/50 text-white max-w-2xl max-h-[90vh] overflow-y-auto">
                                                         <DialogHeader>
                                                             <DialogTitle className="text-2xl text-white flex items-center space-x-3">
                                                                     <div className={`w-8 h-8 ${getRankBadgeColor(selectedGate?.rank || 'E')} rounded-full flex items-center justify-center font-bold`}>
@@ -206,7 +206,7 @@ const getRankBadgeColor = (rank: string) => {
                                                                 </div>
                                                                     <span>{selectedGate?.name || 'Unknown Gate'}</span>
                                                             </DialogTitle>
-                                                            <DialogDescription className="text-purple-200">
+                                                            <DialogDescription className="text-blue-200">
                                                                     Detailed information about {selectedGate?.name || 'this gate'} including capacity and active parties.
                                                             </DialogDescription>
                                                         </DialogHeader>
@@ -224,24 +224,24 @@ const getRankBadgeColor = (rank: string) => {
 
                                                             {/* Description */}
                                                             <div>
-                                                                <h4 className="text-lg font-semibold text-purple-300 mb-2">Description</h4>
+                                                                <h4 className="text-lg font-semibold text-blue-300 mb-2">Description</h4>
                                                                     <p className="text-gray-300 leading-relaxed">{selectedGate?.description || 'No description available'}</p>
                                                             </div>
 
                                                                 {/* Gate Stats */}
                                                             <div className="grid grid-cols-2 gap-4">
-                                                                <div className="bg-purple-950/50 border border-purple-600/30 rounded-lg p-3">
+                                                                <div className="bg-blue-950/50 border border-blue-600/30 rounded-lg p-3">
                                                                     <div className="flex items-center space-x-2 mb-1">
-                                                                        <Users className="w-4 h-4 text-purple-400" />
-                                                                            <span className="text-sm text-purple-300">Total Capacity</span>
+                                                                        <Users className="w-4 h-4 text-blue-400" />
+                                                                            <span className="text-sm text-blue-300">Total Capacity</span>
                                                                     </div>
                                                                         <p className="text-white font-semibold">{maxCapacity}</p>
                                                                 </div>
 
-                                                                <div className="bg-purple-950/50 border border-purple-600/30 rounded-lg p-3">
+                                                                <div className="bg-blue-950/50 border border-blue-600/30 rounded-lg p-3">
                                                                     <div className="flex items-center space-x-2 mb-1">
-                                                                            <MapPin className="w-4 h-4 text-purple-400" />
-                                                                            <span className="text-sm text-purple-300">Map Code</span>
+                                                                            <MapPin className="w-4 h-4 text-blue-400" />
+                                                                            <span className="text-sm text-blue-300">Map Code</span>
                                                                     </div>
                                                                         <p className="text-white font-semibold">{selectedGate?.mapCode || 'Unknown'}</p>
                                                                 </div>
@@ -250,13 +250,13 @@ const getRankBadgeColor = (rank: string) => {
                                                                 {/* Occupancy */}
                                                                 {selectedGate?.occupancy && selectedGate.occupancy.length > 0 && (
                                                                     <div>
-                                                                        <h4 className="text-lg font-semibold text-purple-300 mb-3">Active Parties</h4>
+                                                                        <h4 className="text-lg font-semibold text-blue-300 mb-3">Active Parties</h4>
                                                                         <div className="space-y-2">
                                                                             {selectedGate.occupancy.map((party, index) => (
-                                                                                <div key={index} className="bg-slate-950/60 border border-purple-600/30 rounded-lg p-3">
+                                                                                <div key={index} className="bg-slate-950/60 border border-blue-600/30 rounded-lg p-3">
                                                                                     <div className="flex justify-between items-center">
                                                                                         <span className="text-white font-semibold">Party {party.partyId}</span>
-                                                                                        <Badge className="bg-purple-600/20 text-purple-300">
+                                                                                        <Badge className="bg-blue-600/20 text-blue-300">
                                                                                             {party.current}/{party.max} players
                                                                                         </Badge>
                                                             </div>
@@ -268,7 +268,7 @@ const getRankBadgeColor = (rank: string) => {
 
                                                             {/* Action Button */}
                                                             <Button
-                                                                className="w-full bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white shadow-xl shadow-purple-600/30 py-6"
+                                                                className="w-full bg-gradient-to-r from-blue-700 to-cyan-700 hover:from-blue-800 hover:to-cyan-800 text-white shadow-xl shadow-blue-600/30 py-6"
                                                                     disabled={totalOccupancy >= maxCapacity}
                                                                 size="lg"
                                                                     onClick={() => selectedGate && onJoinDungeon(selectedGate.id)}
@@ -283,7 +283,7 @@ const getRankBadgeColor = (rank: string) => {
                                         </CardContent>
 
                                         {/* Aura Effect Overlay */}
-                                        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/5 via-transparent to-indigo-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                                        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 via-transparent to-cyan-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                                     </div>
                                 </Card>
                                 );
@@ -292,24 +292,24 @@ const getRankBadgeColor = (rank: string) => {
 
                         {/* Stats Footer */}
                         <div className="mt-12 text-center">
-                            <div className="inline-flex items-center space-x-8 bg-black/80 border border-purple-600/40 rounded-lg px-8 py-4">
+                            <div className="inline-flex items-center space-x-8 bg-black/80 border border-blue-600/40 rounded-lg px-8 py-4">
                                 <div className="text-center">
                                     <p className="text-2xl font-bold text-white">{gates.length}</p>
-                                    <p className="text-sm text-purple-300">Active Gates</p>
+                                    <p className="text-sm text-blue-300">Active Gates</p>
                                 </div>
-                                <div className="w-px h-8 bg-purple-600/40"></div>
+                                <div className="w-px h-8 bg-blue-600/40"></div>
                                 <div className="text-center">
                                     <p className="text-2xl font-bold text-white">
                                         {gates.reduce((sum, gate) => sum + gate.occupancy.reduce((occSum, occ) => occSum + occ.current, 0), 0)}
                                     </p>
-                                    <p className="text-sm text-purple-300">Active Hunters</p>
+                                    <p className="text-sm text-blue-300">Active Hunters</p>
                                 </div>
-                                <div className="w-px h-8 bg-purple-600/40"></div>
+                                <div className="w-px h-8 bg-blue-600/40"></div>
                                 <div className="text-center">
                                     <p className="text-2xl font-bold text-white">
                                         {gates.filter(g => ['S', 'A', 'B'].includes(g.rank)).length}
                                     </p>
-                                    <p className="text-sm text-purple-300">Elite Gates</p>
+                                    <p className="text-sm text-blue-300">Elite Gates</p>
                                 </div>
                             </div>
                         </div>
